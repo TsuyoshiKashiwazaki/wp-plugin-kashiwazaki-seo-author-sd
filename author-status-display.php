@@ -3,7 +3,7 @@
  * Plugin Name:  Kashiwazaki SEO Author Schema Display
  * Plugin URI:   https://www.tsuyoshikashiwazaki.jp/
  * Description:  著者カード（顔写真・肩書・SNS 等）を記事上下に自動表示し、Article・NewsArticle・BlogPosting・WebPage＋Role・Person の JSON‑LD を生成、E‑E‑A‑Tとリッチリザルトを一括強化するオールインワン SEO プラグイン。
- * Version:      1.0.0
+ * Version:      1.0.1
  * Author:       柏崎剛 (Tsuyoshi Kashiwazaki)
  * Author URI:   https://www.tsuyoshikashiwazaki.jp/
  * License:      GPL-2.0-or-later
@@ -16,7 +16,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
-define( 'KSAS_ASD_VERSION', '1.0.0' );
+define( 'KSAS_ASD_VERSION', '1.0.1' );
 define( 'KSAS_ASD_PATH', plugin_dir_path( __FILE__ ) );
 define( 'KSAS_ASD_URL',  plugin_dir_url( __FILE__ ) );
 define( 'KSAS_ASD_BASENAME', plugin_basename( __FILE__ ) );

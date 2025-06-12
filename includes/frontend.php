@@ -331,7 +331,7 @@ if ( ! function_exists( 'ksas_output_plugin_schema' ) ) {
 			if ( $display_on_front_page ) {
 				$should_output = true;
 			}
-		} elseif ( is_singular( $enabled_types ) ) { // Any other singular post/page of an enabled type
+		} elseif ( ! empty( $enabled_types ) && is_singular( $enabled_types ) ) { // Any other singular post/page of an enabled type
 			$should_output = true;
 		}
 		
@@ -371,10 +371,8 @@ add_filter( 'the_content', function ( $content ) {
 			if ( $display_on_front_page ) {
 				$should_display = true;
 				$post_id_to_use = get_queried_object_id();
-			} else {
-				$should_display = false; // Override any 'page' type setting if front page display is off
 			}
-		} elseif ( is_singular( $enabled_types ) ) { // Any other singular post/page of an enabled type
+		} elseif ( ! empty( $enabled_types ) && is_singular( $enabled_types ) ) { // Any other singular post/page of an enabled type
 			$should_display = true;
 			$post_id_to_use = get_queried_object_id();
 		}
@@ -401,18 +399,19 @@ add_filter( 'the_content', function ( $content ) {
 
 add_action( 'wp_head', function () {
 	$schema_mode = get_option( 'ksas_schema_mode', 'none' );
+	if ( 'none' === $schema_mode ) {
+		return;
+	}
 	$enabled_types = get_option( 'ksas_post_types', [] );
 	$display_on_front_page = get_option( 'ksas_display_on_front_page', 0 );
 
 	$should_output = false;
-	if ( $schema_mode !== 'none' && is_array($enabled_types) && !empty($enabled_types) ) {
-		if ( is_front_page() && is_page() ) { // Static front page
-			if ( $display_on_front_page ) {
-				$should_output = true;
-			}
-		} elseif ( is_singular( $enabled_types ) ) { // Any other singular post/page of an enabled type
+	if ( is_front_page() && is_page() ) { // Static front page
+		if ( $display_on_front_page ) {
 			$should_output = true;
 		}
+	} elseif ( ! empty( $enabled_types ) && is_singular( $enabled_types ) ) { // Any other singular post/page of an enabled type
+		$should_output = true;
 	}
 
 	if ( ! $should_output ) { return; }
@@ -426,14 +425,12 @@ add_action( 'wp_enqueue_scripts', function () {
 	$display_on_front_page = get_option( 'ksas_display_on_front_page', 0 );
 
 	$should_enqueue = false;
-	if ( is_array($enabled_types) && !empty($enabled_types) ) {
-		if ( is_front_page() && is_page() ) { // Static front page
-			if ( $display_on_front_page ) {
-				$should_enqueue = true;
-			}
-		} elseif ( is_singular( $enabled_types ) ) { // Any other singular post/page of an enabled type
+	if ( is_front_page() && is_page() ) { // Static front page
+		if ( $display_on_front_page ) {
 			$should_enqueue = true;
 		}
+	} elseif ( ! empty( $enabled_types ) && is_singular( $enabled_types ) ) { // Any other singular post/page of an enabled type
+		$should_enqueue = true;
 	}
 
 	if ( ! $should_enqueue ) { return; }
