@@ -3,8 +3,8 @@
  * Plugin Name:  Kashiwazaki SEO Author Schema Display
  * Plugin URI:   https://www.tsuyoshikashiwazaki.jp/
  * Description:  著者カード（顔写真・肩書・SNS 等）を記事上下に自動表示し、Article・NewsArticle・BlogPosting・WebPage＋Role・Person の JSON‑LD を生成、E‑E‑A‑Tとリッチリザルトを一括強化するオールインワン SEO プラグイン。
- * Version:      1.0.1
- * Author:       柏崎剛 (Tsuyoshi Kashiwazaki)
+ * Version:      1.0.2
+ * Author:       柏崎剛 (Tsuyoshi Kashiwazaki)
  * Author URI:   https://www.tsuyoshikashiwazaki.jp/
  * License:      GPL-2.0-or-later
  * License URI:  https://www.gnu.org/licenses/gpl-2.0.html
@@ -16,7 +16,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
-define( 'KSAS_ASD_VERSION', '1.0.1' );
+define( 'KSAS_ASD_VERSION', '1.0.2' );
 define( 'KSAS_ASD_PATH', plugin_dir_path( __FILE__ ) );
 define( 'KSAS_ASD_URL',  plugin_dir_url( __FILE__ ) );
 define( 'KSAS_ASD_BASENAME', plugin_basename( __FILE__ ) );
@@ -47,13 +47,22 @@ register_activation_hook( __FILE__, function () {
 		add_option( 'ksas_link_props', [ 'author' ] );
 	}
 	if ( get_option( 'ksas_article_anchor', null ) === null ) {
-		add_option( 'ksas_article_anchor', '' ); // Default to empty string
+		add_option( 'ksas_article_anchor', '' );
 	}
 	if ( get_option( 'ksas_schema_plugin_enable', null ) === null ) {
 		add_option( 'ksas_schema_plugin_enable', 0 );
 	}
 	if ( get_option( 'ksas_display_on_front_page', null ) === null ) {
 		add_option( 'ksas_display_on_front_page', 0 );
+	}
+	if ( get_option( 'ksas_display_on_category', null ) === null ) {
+		add_option( 'ksas_display_on_category', 0 );
+	}
+	if ( get_option( 'ksas_display_on_tag', null ) === null ) {
+		add_option( 'ksas_display_on_tag', 0 );
+	}
+	if ( get_option( 'ksas_display_on_home', null ) === null ) {
+		add_option( 'ksas_display_on_home', 0 );
 	}
 });
 
@@ -75,6 +84,9 @@ function ksas_asd_uninstall() {
 		'ksas_article_anchor',
 		'ksas_schema_plugin_enable',
 		'ksas_display_on_front_page',
+		'ksas_display_on_category',
+		'ksas_display_on_tag',
+		'ksas_display_on_home',
 	];
 	foreach ( $options_to_delete as $option_name ) {
 		delete_option( $option_name );

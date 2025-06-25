@@ -1,6 +1,6 @@
 # Kashiwazaki SEO Author Schema Display
 
-[![Version](https://img.shields.io/badge/Version-1.0.1-orange.svg)](https://github.com/tsuyoshikashiwazaki/wp-plugin-kashiwazaki-seo-author-sd/releases/tag/v1.0.1)
+[![Version](https://img.shields.io/badge/Version-1.0.2-orange.svg)](https://github.com/tsuyoshikashiwazaki/wp-plugin-kashiwazaki-seo-author-sd/releases/tag/v1.0.2)
 [![WordPress](https://img.shields.io/badge/WordPress-5.8+-blue.svg)](https://wordpress.org/)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://www.php.net/)
 [![License](https://img.shields.io/badge/License-GPLv2-green.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
@@ -74,6 +74,12 @@ The author and developer of this plugin, Tsuyoshi Kashiwazaki, is not responsibl
 本プラグインの作者および開発者（柏崎剛）は、本プラグインの使用に起因するいかなる損害や損失についても、一切の責任を負いません。本プラグインの利用は、すべて利用者ご自身の責任において行ってください。本プラグインは、明示または黙示を問わず、いかなる保証も伴わずに「現状有姿」で提供されます。
 
 ## 変更履歴
+
+### 1.0.2
+* 新機能: カテゴリページとタグページでの著者ボックス表示に対応
+* 新機能: ショートコード `[ksas_author]` を追加（任意の場所に著者ボックスを表示可能）
+* 改善: 著者ボックスの表示位置を調整（他のプラグインとの競合を軽減）
+* 改善: カテゴリ・タグページでのスキーマ生成に対応
 
 ### 1.0.1
 * 修正: 設定画面で「著者ボックスを表示するページ」のチェックをすべて外しても、個別投稿ページで機能が意図せず動作してしまう重大な不具合を修正しました。(`is_singular()`関数に起因する問題への対応)
