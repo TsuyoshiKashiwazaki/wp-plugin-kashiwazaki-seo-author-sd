@@ -61,9 +61,9 @@ function ksas_sns_icon_class( string $url ): string {
 		'threads.net'           => 'dashicons-format-status',
 		'behance.net'           => 'dashicons-portfolio',
 		'dribbble.com'          => 'dashicons-admin-customizer',
-		'github.com'            => 'dashicons-github',
-		'gist.github.com'       => 'dashicons-github',
-		'gitlab.com'            => 'dashicons-gitlab',
+		'github.com'            => 'dashicons-editor-code',
+		'gist.github.com'       => 'dashicons-editor-code',
+		'gitlab.com'            => 'dashicons-editor-code',
 		'bitbucket.org'         => 'dashicons-editor-code',
 		'stackoverflow.com'     => 'dashicons-editor-help',
 		'stackexchange.com'     => 'dashicons-editor-help',
@@ -197,4 +197,98 @@ function ksas_available_link_props(): array {
 		'accountablePerson' => 'accountablePerson',
 		'copyrightHolder'   => 'copyrightHolder',
 	];
+}
+
+function ksas_get_author_data_by_type( int $user_id ): array {
+	$author_type = get_user_meta( $user_id, 'asd_author_type', true ) ?: 'person';
+	$name_default = get_the_author_meta( 'display_name', $user_id ) ?: get_bloginfo( 'name' );
+	
+	// 共通データ
+	$data = [
+		'author_type' => $author_type,
+		'role' => get_user_meta( $user_id, 'asd_role_type', true ) ?: 'author',
+	];
+	
+	// 著者タイプ別のデータを取得（新しいフィールド優先、なければ旧フィールドから取得）
+	switch ( $author_type ) {
+		case 'person':
+			$data['display_name'] = get_user_meta( $user_id, 'asd_person_display_name', true ) 
+									?: get_user_meta( $user_id, 'asd_display_name', true ) 
+									?: $name_default;
+			$data['avatar'] = get_user_meta( $user_id, 'asd_person_avatar_url', true ) 
+							 ?: get_user_meta( $user_id, 'asd_avatar_url', true );
+			$data['alternate'] = get_user_meta( $user_id, 'asd_person_alternate_name', true ) 
+								?: get_user_meta( $user_id, 'asd_alternate_name', true );
+			$data['occupation'] = get_user_meta( $user_id, 'asd_person_occupation', true ) 
+								 ?: get_user_meta( $user_id, 'asd_occupation', true );
+			$data['org'] = get_user_meta( $user_id, 'asd_person_organization', true ) 
+						  ?: get_user_meta( $user_id, 'asd_organization', true );
+			$data['email'] = get_user_meta( $user_id, 'asd_person_contact_email', true ) 
+							?: get_user_meta( $user_id, 'asd_contact_email', true );
+			$data['profile'] = get_user_meta( $user_id, 'asd_person_profile_link', true ) 
+							  ?: get_user_meta( $user_id, 'asd_profile_link', true );
+			$data['bio'] = get_user_meta( $user_id, 'asd_person_bio', true ) 
+						  ?: get_user_meta( $user_id, 'asd_bio', true );
+			$data['sns_raw'] = get_user_meta( $user_id, 'asd_person_sns_urls', true ) 
+							  ?: get_user_meta( $user_id, 'asd_sns_urls', true );
+			break;
+			
+		case 'organization':
+			$data['display_name'] = get_user_meta( $user_id, 'asd_organization_display_name', true ) 
+									?: get_user_meta( $user_id, 'asd_display_name', true ) 
+									?: $name_default;
+			$data['avatar'] = get_user_meta( $user_id, 'asd_organization_avatar_url', true ) 
+							 ?: get_user_meta( $user_id, 'asd_avatar_url', true );
+			$data['alternate'] = get_user_meta( $user_id, 'asd_organization_alternate_name', true ) 
+								?: get_user_meta( $user_id, 'asd_alternate_name', true );
+			$data['occupation'] = ''; // 組織には職業はなし
+			$data['org'] = ''; // 組織自体なので所属組織はなし
+			$data['email'] = get_user_meta( $user_id, 'asd_organization_contact_email', true ) 
+							?: get_user_meta( $user_id, 'asd_contact_email', true );
+			$data['profile'] = get_user_meta( $user_id, 'asd_organization_profile_link', true ) 
+							  ?: get_user_meta( $user_id, 'asd_profile_link', true );
+			$data['bio'] = get_user_meta( $user_id, 'asd_organization_bio', true ) 
+						  ?: get_user_meta( $user_id, 'asd_bio', true );
+			$data['sns_raw'] = get_user_meta( $user_id, 'asd_organization_sns_urls', true ) 
+							  ?: get_user_meta( $user_id, 'asd_sns_urls', true );
+			break;
+			
+		case 'corporation':
+			$data['display_name'] = get_user_meta( $user_id, 'asd_corporation_display_name', true ) 
+									?: get_user_meta( $user_id, 'asd_display_name', true ) 
+									?: $name_default;
+			$data['avatar'] = get_user_meta( $user_id, 'asd_corporation_avatar_url', true ) 
+							 ?: get_user_meta( $user_id, 'asd_avatar_url', true );
+			$data['alternate'] = get_user_meta( $user_id, 'asd_corporation_alternate_name', true ) 
+								?: get_user_meta( $user_id, 'asd_alternate_name', true );
+			$data['occupation'] = ''; // 法人には職業はなし
+			$data['org'] = ''; // 法人自体なので所属組織はなし
+			$data['email'] = get_user_meta( $user_id, 'asd_corporation_contact_email', true ) 
+							?: get_user_meta( $user_id, 'asd_contact_email', true );
+			$data['profile'] = get_user_meta( $user_id, 'asd_corporation_profile_link', true ) 
+							  ?: get_user_meta( $user_id, 'asd_profile_link', true );
+			$data['bio'] = get_user_meta( $user_id, 'asd_corporation_bio', true ) 
+						  ?: get_user_meta( $user_id, 'asd_bio', true );
+			$data['sns_raw'] = get_user_meta( $user_id, 'asd_corporation_sns_urls', true ) 
+							  ?: get_user_meta( $user_id, 'asd_sns_urls', true );
+			break;
+			
+		default:
+			// デフォルトは person として扱う
+			$data['display_name'] = get_user_meta( $user_id, 'asd_display_name', true ) ?: $name_default;
+			$data['avatar'] = get_user_meta( $user_id, 'asd_avatar_url', true );
+			$data['alternate'] = get_user_meta( $user_id, 'asd_alternate_name', true );
+			$data['occupation'] = get_user_meta( $user_id, 'asd_occupation', true );
+			$data['org'] = get_user_meta( $user_id, 'asd_organization', true );
+			$data['email'] = get_user_meta( $user_id, 'asd_contact_email', true );
+			$data['profile'] = get_user_meta( $user_id, 'asd_profile_link', true );
+			$data['bio'] = get_user_meta( $user_id, 'asd_bio', true );
+			$data['sns_raw'] = get_user_meta( $user_id, 'asd_sns_urls', true );
+			break;
+	}
+	
+	// SNS URLsを配列に変換
+	$data['sns'] = array_filter( array_map( 'trim', explode( "\n", $data['sns_raw'] ) ) );
+	
+	return $data;
 }

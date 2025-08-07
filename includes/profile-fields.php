@@ -33,14 +33,37 @@ function ksas_profile_fields( $user ) {
 		<?php
 
 		$fields = [
-			'asd_display_name'  => [ '表示名 / 組織名', 'text', '著者ボックスとスキーマの`name`に使用されます。空の場合はWordPressの表示名が使用されます。' ],
-			'asd_avatar_url'    => [ 'プロフィール画像 / ロゴ URL', 'url', '著者の画像または組織ロゴのURL（推奨：正方形、112x112px以上）。空の場合はGravatar/WordPressアバターが使用されます。' ],
-			'asd_role_type'     => [ '役割種別', 'select', 'このユーザー/組織の主な役割（例：執筆者、監修者）を選択します。バッジ表示やスキーマに影響します。' ],
-			'asd_alternate_name'=> [ '別名 / 代替名', 'text', 'スキーマの`alternateName`に使用されます。（例：ペンネーム、旧組織名など）' ],
-			'asd_occupation'    => [ '職業/肩書き', 'text', '【人物タイプのみ】著者ボックスとスキーマの`jobTitle`に使用されます。', 'person' ],
-			'asd_organization'  => [ '所属組織', 'text', '【人物タイプのみ】スキーマの`worksFor`に使用されます。', 'person' ],
-			'asd_contact_email' => [ '連絡先メールアドレス（公開用）', 'email', '連絡用の公開メールアドレス。メールアイコンのリンクとスキーマの`email`に使用されます。' ],
-			'asd_profile_link'  => [ 'プロフィールリンク（著者ページ、公式サイト等）', 'url', '著者/組織のメインプロフィールやウェブサイトへのリンク。画像/名前のリンクとスキーマの`url`/`@id`に使用されます。' ],
+			// 共通フィールド
+			'asd_role_type'     => [ '役割種別', 'select', 'このユーザー/組織の主な役割（例：執筆者、監修者）を選択します。バッジ表示やスキーマに影響します。', 'common' ],
+			
+			// 人物タイプ専用フィールド
+			'asd_person_display_name'  => [ '表示名', 'text', '著者ボックスとスキーマの`name`に使用されます。空の場合はWordPressの表示名が使用されます。', 'person' ],
+			'asd_person_avatar_url'    => [ '顔写真/プロフィール画像 URL', 'url', 'プロフィール画像のURL（推奨：正方形、112x112px以上）。空の場合はGravatar/WordPressアバターが使用されます。', 'person' ],
+			'asd_person_alternate_name'=> [ '別名（ペンネーム、ニックネーム等）', 'text', 'スキーマの`alternateName`に使用されます。', 'person' ],
+			'asd_person_occupation'    => [ '職業/肩書き', 'text', '著者ボックスとスキーマの`jobTitle`に使用されます。', 'person' ],
+			'asd_person_organization'  => [ '所属組織', 'text', 'スキーマの`worksFor`に使用されます。', 'person' ],
+			'asd_person_contact_email' => [ '連絡先メールアドレス（公開用）', 'email', '連絡用の公開メールアドレス。メールアイコンのリンクとスキーマの`email`に使用されます。', 'person' ],
+			'asd_person_profile_link'  => [ 'プロフィールリンク（著者ページ、ウェブサイト等）', 'url', '著者のメインプロフィールやウェブサイトへのリンク。画像/名前のリンクとスキーマの`url`/`@id`に使用されます。', 'person' ],
+			'asd_person_bio'           => [ 'プロフィール文', 'textarea', '簡単な自己紹介。著者ボックスとスキーマの`description`に使用されます。HTMLタグは除去されます。', 'person' ],
+			'asd_person_sns_urls'      => [ 'SNS・ウェブサイトURL（1行に1つ）', 'textarea', '関連するURLを1行に1つずつ入力します。アイコンリンクとスキーマの`sameAs`に使用されます。', 'person' ],
+			
+			// 組織タイプ専用フィールド
+			'asd_organization_display_name'  => [ '組織名', 'text', '著者ボックスとスキーマの`name`に使用されます。', 'organization' ],
+			'asd_organization_avatar_url'    => [ 'ロゴ画像 URL', 'url', '組織ロゴのURL（推奨：正方形、112x112px以上）。', 'organization' ],
+			'asd_organization_alternate_name'=> [ '代替名（略称、旧組織名など）', 'text', 'スキーマの`alternateName`に使用されます。', 'organization' ],
+			'asd_organization_contact_email' => [ '連絡先メールアドレス（公開用）', 'email', '連絡用の公開メールアドレス。メールアイコンのリンクとスキーマの`email`に使用されます。', 'organization' ],
+			'asd_organization_profile_link'  => [ '公式サイト URL', 'url', '組織の公式サイトへのリンク。画像/名前のリンクとスキーマの`url`/`@id`に使用されます。', 'organization' ],
+			'asd_organization_bio'           => [ '組織概要', 'textarea', '組織の概要や事業内容。著者ボックスとスキーマの`description`に使用されます。HTMLタグは除去されます。', 'organization' ],
+			'asd_organization_sns_urls'      => [ '関連リンク（公式サイト、SNS等、1行に1つ）', 'textarea', '関連するURLを1行に1つずつ入力します。アイコンリンクとスキーマの`sameAs`に使用されます。', 'organization' ],
+			
+			// 法人タイプ専用フィールド
+			'asd_corporation_display_name'  => [ '法人名', 'text', '著者ボックスとスキーマの`name`に使用されます。', 'corporation' ],
+			'asd_corporation_avatar_url'    => [ 'ロゴ画像 URL', 'url', '法人ロゴのURL（推奨：正方形、112x112px以上）。', 'corporation' ],
+			'asd_corporation_alternate_name'=> [ '代替名（略称、旧法人名など）', 'text', 'スキーマの`alternateName`に使用されます。', 'corporation' ],
+			'asd_corporation_contact_email' => [ '連絡先メールアドレス（公開用）', 'email', '連絡用の公開メールアドレス。メールアイコンのリンクとスキーマの`email`に使用されます。', 'corporation' ],
+			'asd_corporation_profile_link'  => [ '公式サイト URL', 'url', '法人の公式サイトへのリンク。画像/名前のリンクとスキーマの`url`/`@id`に使用されます。', 'corporation' ],
+			'asd_corporation_bio'           => [ '法人概要', 'textarea', '法人の概要や事業内容。著者ボックスとスキーマの`description`に使用されます。HTMLタグは除去されます。', 'corporation' ],
+			'asd_corporation_sns_urls'      => [ '関連リンク（公式サイト、SNS等、1行に1つ）', 'textarea', '関連するURLを1行に1つずつ入力します。アイコンリンクとスキーマの`sameAs`に使用されます。', 'corporation' ],
 		];
 
 		foreach ( $fields as $key => $info ) {
@@ -48,14 +71,22 @@ function ksas_profile_fields( $user ) {
 			$val = get_user_meta( $user->ID, $key, true );
 
 			$row_style = '';
-			if ( $visibility === 'person' && $current_author_type !== 'person' ) {
-				$row_style = ' style="display: none;"';
-			} elseif ( $visibility === 'org' && $current_author_type === 'person' ) {
-				$row_style = ' style="display: none;"';
-			}
 			$row_class = '';
-			if ($visibility === 'person') { $row_class = ' class="ksas-profile-field-person"'; }
-			elseif ($visibility === 'org') { $row_class = ' class="ksas-profile-field-org"'; }
+			
+			if ( $visibility === 'common' ) {
+				$row_class = ' class="ksas-profile-field-common"';
+			} elseif ( $visibility === 'person' && $current_author_type !== 'person' ) {
+				$row_style = ' style="display: none;"';
+				$row_class = ' class="ksas-profile-field-person"';
+			} elseif ( $visibility === 'organization' && $current_author_type !== 'organization' ) {
+				$row_style = ' style="display: none;"';
+				$row_class = ' class="ksas-profile-field-organization"';
+			} elseif ( $visibility === 'corporation' && $current_author_type !== 'corporation' ) {
+				$row_style = ' style="display: none;"';
+				$row_class = ' class="ksas-profile-field-corporation"';
+			} else {
+				$row_class = ' class="ksas-profile-field-' . esc_attr( $visibility ) . '"';
+			}
 
 			?>
 			<tr<?php echo $row_style; ?><?php echo $row_class; ?>>
@@ -69,6 +100,18 @@ function ksas_profile_fields( $user ) {
 								<option value="<?php echo esc_attr( $option_value ); ?>" <?php selected( $current_val, $option_value ); ?>><?php echo esc_html( $option_label ); ?></option>
 							<?php endforeach; ?>
 						</select>
+					<?php elseif ( 'textarea' === $type ) : ?>
+						<textarea name="<?php echo esc_attr( $key ); ?>" id="<?php echo esc_attr( $key ); ?>" rows="5" class="large-text"><?php echo esc_textarea( $val ); ?></textarea>
+					<?php elseif ( 'url' === $type && ( strpos( $key, '_avatar_url' ) !== false ) ) : ?>
+						<div class="ksas-media-uploader">
+							<input type="url" name="<?php echo esc_attr( $key ); ?>" id="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( $val ); ?>" class="regular-text ksas-media-url" />
+							<button type="button" class="button ksas-media-button" data-target="<?php echo esc_attr( $key ); ?>">メディアライブラリから選択</button>
+							<?php if ( ! empty( $val ) ) : ?>
+								<div class="ksas-media-preview">
+									<img src="<?php echo esc_url( $val ); ?>" alt="プレビュー" />
+								</div>
+							<?php endif; ?>
+						</div>
 					<?php else : ?>
 						<input type="<?php echo esc_attr( $type ); ?>" name="<?php echo esc_attr( $key ); ?>" id="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( $val ); ?>" class="regular-text" />
 					<?php endif; ?>
@@ -76,38 +119,54 @@ function ksas_profile_fields( $user ) {
 				</td>
 			</tr>
 		<?php } ?>
-		<tr>
-			<th><label for="asd_bio">プロフィール文 / 組織概要</label></th>
-			<td><textarea name="asd_bio" id="asd_bio" rows="5" class="large-text"><?php echo esc_textarea( get_user_meta( $user->ID, 'asd_bio', true ) ); ?></textarea>
-				<p class="description">簡単な自己紹介や組織の概要。著者ボックスとスキーマの`description`に使用されます。HTMLタグは除去されます。</p></td>
-		</tr>
-		<tr>
-			<th><label for="asd_sns_urls">関連リンク（SNS・ウェブサイト等、1行に1つ）</label></th>
-			<td><textarea name="asd_sns_urls" id="asd_sns_urls" rows="5" class="large-text" placeholder="<?php echo esc_attr("https://twitter.com/your_account\nhttps://your-corp.com/\nhttps://facebook.com/your_page"); ?>"><?php echo esc_textarea( get_user_meta( $user->ID, 'asd_sns_urls', true ) ); ?></textarea>
-				<p class="description">関連するURLを1行に1つずつ入力します。アイコンリンクとスキーマの`sameAs`に使用されます。</p></td>
-		</tr>
 	</table>
+	<style>
+		.ksas-media-uploader {
+			display: flex;
+			align-items: flex-start;
+			gap: 10px;
+			flex-wrap: wrap;
+		}
+		.ksas-media-uploader input.ksas-media-url {
+			flex: 1;
+			min-width: 300px;
+		}
+		.ksas-media-button {
+			white-space: nowrap;
+		}
+		.ksas-media-preview {
+			margin-top: 10px;
+			width: 100%;
+		}
+		.ksas-media-preview img {
+			max-width: 100px;
+			max-height: 100px;
+			border: 1px solid #ddd;
+			padding: 5px;
+			background: #fff;
+			border-radius: 3px;
+		}
+	</style>
 	<script type="text/javascript">
 		jQuery(document).ready(function($) {
+			// フィールド表示切り替え機能
 			function toggleProfileFields(selectedType) {
+				// 全てのタイプ固有フィールドを隠す
+				$('.ksas-profile-field-person').closest('tr').hide();
+				$('.ksas-profile-field-organization').closest('tr').hide();
+				$('.ksas-profile-field-corporation').closest('tr').hide();
+				
+				// 共通フィールドは常に表示
+				$('.ksas-profile-field-common').closest('tr').show();
+				
+				// 選択されたタイプのフィールドのみ表示
 				if (selectedType === 'person') {
 					$('.ksas-profile-field-person').closest('tr').show();
-				} else {
-					$('.ksas-profile-field-person').closest('tr').hide();
+				} else if (selectedType === 'organization') {
+					$('.ksas-profile-field-organization').closest('tr').show();
+				} else if (selectedType === 'corporation') {
+					$('.ksas-profile-field-corporation').closest('tr').show();
 				}
-
-                $('label[for="asd_display_name"]').text(selectedType === 'person' ? '表示名' : '組織名 / 法人名');
-                $('label[for="asd_avatar_url"]').text(selectedType === 'person' ? '顔写真/プロフィール画像 URL' : 'ロゴ画像 URL');
-                $('label[for="asd_profile_link"]').text(selectedType === 'person' ? 'プロフィールリンク（著者ページ、ウェブサイト等）' : '公式サイト URL');
-                $('label[for="asd_bio"]').text(selectedType === 'person' ? 'プロフィール文' : '組織概要 / 事業内容');
-                $('label[for="asd_sns_urls"]').text(selectedType === 'person' ? 'SNS・ウェブサイトURL（1行に1つ）' : '関連リンク（公式サイト、SNS等、1行に1つ）');
-                $('label[for="asd_alternate_name"]').text(selectedType === 'person' ? '別名（ペンネーム、ニックネーム等）' : '代替名（略称、旧組織名など）');
-                $('label[for="asd_occupation"]').text('職業/肩書き');
-                $('label[for="asd_organization"]').text('所属組織');
-
-                if (selectedType === 'person') {
-                    $('.ksas-profile-field-person').closest('tr').css('display', 'table-row');
-                }
 			}
 
 			var initialType = $('#asd_author_type').val();
@@ -116,6 +175,68 @@ function ksas_profile_fields( $user ) {
 			$('#asd_author_type').on('change', function() {
 				toggleProfileFields($(this).val());
 			});
+			
+			// メディアアップローダー機能
+			var mediaUploader;
+			
+			$('.ksas-media-button').on('click', function(e) {
+				e.preventDefault();
+				var targetInput = $(this).data('target');
+				var $targetField = $('#' + targetInput);
+				var $previewDiv = $(this).siblings('.ksas-media-preview');
+				
+				// メディアアップローダーがまだ作成されていない場合は作成
+				if (mediaUploader) {
+					mediaUploader.open();
+					return;
+				}
+				
+				// メディアアップローダーを作成
+				mediaUploader = wp.media({
+					title: '画像を選択',
+					button: {
+						text: '選択'
+					},
+					multiple: false,
+					library: {
+						type: 'image'
+					}
+				});
+				
+				// 画像が選択されたときの処理
+				mediaUploader.on('select', function() {
+					var attachment = mediaUploader.state().get('selection').first().toJSON();
+					$targetField.val(attachment.url);
+					
+					// プレビュー画像を更新
+					if ($previewDiv.length) {
+						$previewDiv.find('img').attr('src', attachment.url);
+					} else {
+						// プレビューが存在しない場合は作成
+						$('<div class="ksas-media-preview"><img src="' + attachment.url + '" alt="プレビュー" /></div>').insertAfter($targetField.parent().find('.ksas-media-button'));
+					}
+				});
+				
+				// アップローダーを開く
+				mediaUploader.open();
+			});
+			
+			// URL入力フィールドの値が変更されたときのプレビュー更新
+			$('.ksas-media-url').on('change', function() {
+				var $this = $(this);
+				var $preview = $this.parent().find('.ksas-media-preview img');
+				var newUrl = $this.val();
+				
+				if (newUrl && $preview.length) {
+					$preview.attr('src', newUrl);
+				} else if (newUrl && !$preview.length) {
+					// プレビューが存在しない場合は作成
+					$('<div class="ksas-media-preview"><img src="' + newUrl + '" alt="プレビュー" /></div>').insertAfter($this.parent().find('.ksas-media-button'));
+				} else if (!newUrl && $preview.length) {
+					// URLが空の場合はプレビューを削除
+					$this.parent().find('.ksas-media-preview').remove();
+				}
+			});
 		});
 	</script>
 	<?php
@@ -123,15 +244,58 @@ function ksas_profile_fields( $user ) {
 add_action( 'show_user_profile', 'ksas_profile_fields' );
 add_action( 'edit_user_profile', 'ksas_profile_fields' );
 
+// ユーザープロフィール画面でメディアライブラリスクリプトを読み込む
+function ksas_admin_enqueue_media_scripts() {
+	$screen = get_current_screen();
+	if ( $screen && ( $screen->id === 'profile' || $screen->id === 'user-edit' ) ) {
+		wp_enqueue_media();
+		wp_enqueue_style( 'wp-color-picker' );
+		wp_enqueue_script( 'wp-color-picker' );
+	}
+}
+add_action( 'admin_enqueue_scripts', 'ksas_admin_enqueue_media_scripts' );
+
 function ksas_save_profile( $user_id ) {
 	if ( ! current_user_can( 'edit_user', $user_id ) ) { return; }
 	if ( ! isset( $_POST['ksas_profile_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['ksas_profile_nonce'] ), 'ksas_save_profile_' . $user_id ) ) { return; }
 
 	$meta_fields = [
+		// 基本設定
 		'asd_author_type'   => 'key',
+		'asd_role_type'     => 'key',
+		
+		// 人物タイプ専用フィールド
+		'asd_person_display_name'  => 'text',
+		'asd_person_avatar_url'    => 'url',
+		'asd_person_alternate_name'=> 'text',
+		'asd_person_occupation'    => 'text',
+		'asd_person_organization'  => 'text',
+		'asd_person_contact_email' => 'email',
+		'asd_person_profile_link'  => 'url',
+		'asd_person_bio'           => 'textarea_strip',
+		'asd_person_sns_urls'      => 'textarea_urls',
+		
+		// 組織タイプ専用フィールド
+		'asd_organization_display_name'  => 'text',
+		'asd_organization_avatar_url'    => 'url',
+		'asd_organization_alternate_name'=> 'text',
+		'asd_organization_contact_email' => 'email',
+		'asd_organization_profile_link'  => 'url',
+		'asd_organization_bio'           => 'textarea_strip',
+		'asd_organization_sns_urls'      => 'textarea_urls',
+		
+		// 法人タイプ専用フィールド
+		'asd_corporation_display_name'  => 'text',
+		'asd_corporation_avatar_url'    => 'url',
+		'asd_corporation_alternate_name'=> 'text',
+		'asd_corporation_contact_email' => 'email',
+		'asd_corporation_profile_link'  => 'url',
+		'asd_corporation_bio'           => 'textarea_strip',
+		'asd_corporation_sns_urls'      => 'textarea_urls',
+		
+		// 旧フィールドとの互換性（後で削除予定）
 		'asd_display_name'  => 'text',
 		'asd_avatar_url'    => 'url',
-		'asd_role_type'     => 'key',
 		'asd_alternate_name'=> 'text',
 		'asd_occupation'    => 'text',
 		'asd_organization'  => 'text',

@@ -1,6 +1,6 @@
 # Kashiwazaki SEO Author Schema Display
 
-[![Version](https://img.shields.io/badge/Version-1.0.2-orange.svg)](https://github.com/tsuyoshikashiwazaki/wp-plugin-kashiwazaki-seo-author-sd/releases/tag/v1.0.2)
+[![Version](https://img.shields.io/badge/Version-1.0.3-orange.svg)](https://github.com/tsuyoshikashiwazaki/wp-plugin-kashiwazaki-seo-author-sd/releases/tag/v1.0.3)
 [![WordPress](https://img.shields.io/badge/WordPress-5.8+-blue.svg)](https://wordpress.org/)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://www.php.net/)
 [![License](https://img.shields.io/badge/License-GPLv2-green.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
@@ -74,6 +74,12 @@ The author and developer of this plugin, Tsuyoshi Kashiwazaki, is not responsibl
 本プラグインの作者および開発者（柏崎剛）は、本プラグインの使用に起因するいかなる損害や損失についても、一切の責任を負いません。本プラグインの利用は、すべて利用者ご自身の責任において行ってください。本プラグインは、明示または黙示を問わず、いかなる保証も伴わずに「現状有姿」で提供されます。
 
 ## 変更履歴
+
+### 1.0.3
+* 新機能: 著者タイプ別データ管理（Person/Organization/Corporation で異なるフィールドセットを使用、旧フィールドとの後方互換性を維持）
+* 新機能: プロフィール画像/ロゴ選択用のメディアライブラリ統合（画像プレビュー機能付き）
+* 改善: テーマ非依存のスタイル実装（!important ルールによる競合防止）
+* 追加: `ksas_get_author_data_by_type()` ヘルパー関数による統一的なデータ取得
 
 ### 1.0.2
 * 新機能: カテゴリページとタグページでの著者ボックス表示に対応

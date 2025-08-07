@@ -3,7 +3,7 @@
  * Plugin Name:  Kashiwazaki SEO Author Schema Display
  * Plugin URI:   https://www.tsuyoshikashiwazaki.jp/
  * Description:  著者カード（顔写真・肩書・SNS 等）を記事上下に自動表示し、Article・NewsArticle・BlogPosting・WebPage＋Role・Person の JSON‑LD を生成、E‑E‑A‑Tとリッチリザルトを一括強化するオールインワン SEO プラグイン。
- * Version:      1.0.2
+ * Version:      1.0.3
  * Author:       柏崎剛 (Tsuyoshi Kashiwazaki)
  * Author URI:   https://www.tsuyoshikashiwazaki.jp/
  * License:      GPL-2.0-or-later
@@ -16,7 +16,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
-define( 'KSAS_ASD_VERSION', '1.0.2' );
+define( 'KSAS_ASD_VERSION', '1.0.3' );
 define( 'KSAS_ASD_PATH', plugin_dir_path( __FILE__ ) );
 define( 'KSAS_ASD_URL',  plugin_dir_url( __FILE__ ) );
 define( 'KSAS_ASD_BASENAME', plugin_basename( __FILE__ ) );
@@ -64,7 +64,61 @@ register_activation_hook( __FILE__, function () {
 	if ( get_option( 'ksas_display_on_home', null ) === null ) {
 		add_option( 'ksas_display_on_home', 0 );
 	}
+	
+	// データベース構造アップグレード
+	ksas_upgrade_database();
 });
+
+/**
+ * データベース構造のアップグレード処理
+ * 旧フィールドから新しいタイプ別フィールドへのマイグレーション
+ */
+function ksas_upgrade_database() {
+	$current_version = get_option( 'ksas_db_version', '1.0.0' );
+	
+	if ( version_compare( $current_version, '1.0.2', '<' ) ) {
+		// バージョン1.0.2へのアップグレード: タイプ別フィールドへの移行
+		$users = get_users( [ 'meta_key' => 'asd_author_type' ] );
+		
+		foreach ( $users as $user ) {
+			$author_type = get_user_meta( $user->ID, 'asd_author_type', true ) ?: 'person';
+			
+			// 旧フィールドから新フィールドへデータをコピー（既に新フィールドにデータがない場合のみ）
+			$migration_map = [
+				'asd_display_name' => 'display_name',
+				'asd_avatar_url' => 'avatar_url', 
+				'asd_alternate_name' => 'alternate_name',
+				'asd_occupation' => 'occupation',
+				'asd_organization' => 'organization',
+				'asd_contact_email' => 'contact_email',
+				'asd_profile_link' => 'profile_link',
+				'asd_bio' => 'bio',
+				'asd_sns_urls' => 'sns_urls',
+			];
+			
+			foreach ( $migration_map as $old_key => $new_suffix ) {
+				$old_value = get_user_meta( $user->ID, $old_key, true );
+				if ( ! empty( $old_value ) ) {
+					$new_key = 'asd_' . $author_type . '_' . $new_suffix;
+					$existing_new_value = get_user_meta( $user->ID, $new_key, true );
+					
+					// 新フィールドが空の場合のみ移行
+					if ( empty( $existing_new_value ) ) {
+						update_user_meta( $user->ID, $new_key, $old_value );
+					}
+				}
+			}
+		}
+		
+		update_option( 'ksas_db_version', '1.0.2' );
+	}
+	
+	if ( version_compare( $current_version, '1.0.3', '<' ) ) {
+		// バージョン1.0.3へのアップグレード: テーマ独立性強化とメディアライブラリ対応
+		// 特別なデータベース変更は不要のため、バージョン番号のみ更新
+		update_option( 'ksas_db_version', '1.0.3' );
+	}
+}
 
 add_action( 'plugins_loaded', function() {
 	load_plugin_textdomain( 'kashiwazaki-seo-asd', false, dirname( KSAS_ASD_BASENAME ) . '/languages/' );

@@ -7,37 +7,22 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 require_once KSAS_ASD_PATH . 'includes/helpers.php';
 
 function ksas_render_author_html( int $uid ): string {
-	$author_type_raw = get_user_meta( $uid, 'asd_author_type', true ) ?: 'person';
-    switch ($author_type_raw) {
+	// 新しいヘルパー関数を使ってデータを取得
+	$meta = ksas_get_author_data_by_type( $uid );
+	$author_type = $meta['author_type'];
+	
+    switch ($author_type) {
         case 'corporation':
             $schema_type_url = 'https://schema.org/Corporation';
-            $author_type = 'corporation';
             break;
         case 'organization':
             $schema_type_url = 'https://schema.org/Organization';
-             $author_type = 'organization';
             break;
         case 'person':
         default:
             $schema_type_url = 'https://schema.org/Person';
-            $author_type = 'person';
             break;
     }
-
-	$name_default = get_the_author_meta( 'display_name', $uid ) ?: get_bloginfo( 'name' );
-	$meta = [
-		'display_name' => get_user_meta( $uid, 'asd_display_name', true ) ?: $name_default,
-		'avatar'       => get_user_meta( $uid, 'asd_avatar_url', true ),
-		'role'         => get_user_meta( $uid, 'asd_role_type', true ) ?: 'author',
-		'alternate'    => get_user_meta( $uid, 'asd_alternate_name', true ),
-		'occupation'   => ( $author_type === 'person' ) ? get_user_meta( $uid, 'asd_occupation', true ) : '',
-		'org'          => ( $author_type === 'person' ) ? get_user_meta( $uid, 'asd_organization', true ) : '',
-		'email'        => get_user_meta( $uid, 'asd_contact_email', true ),
-		'profile'      => get_user_meta( $uid, 'asd_profile_link', true ),
-		'bio'          => get_user_meta( $uid, 'asd_bio', true ),
-		'sns_raw'      => get_user_meta( $uid, 'asd_sns_urls', true ),
-	];
-	$meta['sns'] = array_filter( array_map( 'trim', explode( "\n", $meta['sns_raw'] ) ) );
 	if ( empty( $meta['display_name'] ) ) { return ''; }
 
 	$avatar_img = '';
@@ -87,6 +72,12 @@ function ksas_render_author_html( int $uid ): string {
 						<span class="ksas-alternate" itemprop="alternateName">(<?php echo esc_html( $meta['alternate'] ); ?>)</span>
 					<?php endif; ?>
 				</p>
+
+				<?php if ( $author_type === 'person' && ! empty( $meta['org'] ) ) : ?>
+				<p class="ksas-org" itemprop="worksFor" itemscope itemtype="https://schema.org/Organization">
+					<span itemprop="name"><?php echo esc_html( $meta['org'] ); ?></span>
+				</p>
+				<?php endif; ?>
 			</div>
 		</div>
 		<?php if ( ! empty( $meta['bio'] ) ) : ?>
@@ -178,37 +169,34 @@ function ksas_schema_author_block( string $mode ): string {
 	
 	if ( ! $author_id ) { return ''; }
 
-	$author_type_raw = get_user_meta( $author_id, 'asd_author_type', true ) ?: 'person';
-	switch ($author_type_raw) {
+	// 新しいヘルパー関数を使ってデータを取得
+	$meta = ksas_get_author_data_by_type( $author_id );
+	$author_type = $meta['author_type'];
+	
+	switch ($author_type) {
         case 'corporation':
             $schema_type = 'Corporation';
-            $author_type = 'corporation';
             break;
         case 'organization':
             $schema_type = 'Organization';
-            $author_type = 'organization';
             break;
         case 'person':
         default:
             $schema_type = 'Person';
-            $author_type = 'person';
             break;
     }
 
-	$u          = get_userdata( $author_id );
-	$name       = trim( get_user_meta( $author_id, 'asd_display_name', true ) );
-	if ( empty($name) && $u ) { $name = $u->display_name; }
+	$name = trim( $meta['display_name'] );
 	if ( empty($name) ) { return ''; }
 
-	$avatar   = ksas_normalize_url( get_user_meta( $author_id, 'asd_avatar_url', true ) );
-	$alt_name = trim( get_user_meta( $author_id, 'asd_alternate_name', true ) );
-	$job      = ( $author_type === 'person' ) ? trim( get_user_meta( $author_id, 'asd_occupation', true ) ) : '';
-	$org_meta = ( $author_type === 'person' ) ? trim( get_user_meta( $author_id, 'asd_organization', true ) ) : '';
-	$email    = trim( get_user_meta( $author_id, 'asd_contact_email', true ) );
-	$bio      = trim( get_user_meta( $author_id, 'asd_bio', true ) );
-	$plink    = ksas_normalize_url( get_user_meta( $author_id, 'asd_profile_link', true ) );
-	$sns_raw  = get_user_meta( $author_id, 'asd_sns_urls', true );
-	$same_as  = array_filter( array_map( 'ksas_normalize_url', explode( "\n", $sns_raw ) ) );
+	$avatar   = ksas_normalize_url( $meta['avatar'] );
+	$alt_name = trim( $meta['alternate'] );
+	$job      = trim( $meta['occupation'] );
+	$org_meta = trim( $meta['org'] );
+	$email    = trim( $meta['email'] );
+	$bio      = trim( $meta['bio'] );
+	$plink    = ksas_normalize_url( $meta['profile'] );
+	$same_as  = array_filter( array_map( 'ksas_normalize_url', $meta['sns'] ) );
 
 	$author_node_common = [ '@type' => $schema_type, 'name' => $name ];
 	$author_profile_url = $plink ?: ( ( $author_type === 'person' ) ? get_author_posts_url( $author_id ) : '' );
@@ -234,7 +222,7 @@ function ksas_schema_author_block( string $mode ): string {
 
 	$author_node = $author_node_common;
 
-	$role_type = get_user_meta( $author_id, 'asd_role_type', true ) ?: 'author';
+	$role_type = $meta['role'];
 	$role_labels = [ 'author'=>'執筆者','supervisor'=>'監修者','admin'=>'管理者' ];
 	$role_name = $role_labels[ $role_type ] ?? '執筆者';
 
@@ -377,7 +365,7 @@ function ksas_schema_author_block( string $mode ): string {
 	$json_ld_output = '<script type="application/ld+json" class="ksas-schema-graph">' . wp_json_encode( $output_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT ) . '</script>';
 
     if ( defined('WP_DEBUG') && WP_DEBUG ) {
-        $debug_comment = sprintf("\n<!-- KSAS Schema Mode: %s | Author Type Raw: %s | Schema Type: %s | Graph Nodes: %d -->\n", esc_html($mode), esc_html($author_type_raw), esc_html($schema_type), count($unique_graph) );
+        $debug_comment = sprintf("\n<!-- KSAS Schema Mode: %s | Author Type: %s | Schema Type: %s | Graph Nodes: %d -->\n", esc_html($mode), esc_html($author_type), esc_html($schema_type), count($unique_graph) );
         return $debug_comment . $json_ld_output;
     }
 	return $json_ld_output;
@@ -555,5 +543,5 @@ add_action( 'wp_enqueue_scripts', function () {
 
 	if ( ! $should_enqueue ) { return; }
 	wp_enqueue_style( 'dashicons' );
-	wp_enqueue_style( 'ksas-style', KSAS_ASD_URL . 'assets/style.css', [], KSAS_ASD_VERSION );
+	wp_enqueue_style( 'ksas-style', KSAS_ASD_URL . 'assets/style.css', ['dashicons'], KSAS_ASD_VERSION );
 }, 10 );
