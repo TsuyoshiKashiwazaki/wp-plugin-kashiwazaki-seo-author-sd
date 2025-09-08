@@ -1,0 +1,136 @@
+# Kashiwazaki SEO Author Schema Display
+
+WordPressプラグイン「Kashiwazaki SEO Author Schema Display」は、著者カード（顔写真・肩書・SNS等）を記事上下に自動表示し、Article・NewsArticle・BlogPosting・WebPage＋Role・Person の JSON‑LD を生成、E‑E‑A‑Tとリッチリザルトを一括強化するオールインワン SEO プラグインです。
+
+## 主な機能
+
+### 🎯 著者情報の自動表示
+- **著者カード**: 顔写真、名前、肩書き、所属組織、プロフィール文、SNSリンクを美しく表示
+- **表示位置**: 記事上部、記事下部、見出しタグ前、または両方に表示可能
+- **レスポンシブ対応**: スマートフォンやタブレットでも適切にレイアウト調整
+
+### 👥 著者タイプ別管理
+- **人物 (Person)**: 個人の著者情報（職業、所属組織、プロフィール等）
+- **組織 (Organization)**: 組織の情報（組織名、概要、関連リンク等）
+- **法人 (Corporation)**: 法人の情報（法人名、事業内容、公式サイト等）
+
+各著者タイプごとに専用のフィールドで管理し、選択されたタイプに応じて適切な情報のみを表示します。
+
+### 📊 Schema.org 対応
+- **JSON-LD**: Article、NewsArticle、BlogPosting、WebPageスキーマを自動生成
+- **Role構造**: author、editor、supervisor等の役割情報を含む詳細な構造化データ
+- **リッチリザルト**: 検索結果での著者情報表示を強化
+
+### 🎨 テーマ独立設計
+- **CSS干渉防止**: `!important`を使用した強固なスタイル定義でテーマCSSの影響を回避
+- **Dashiconsサポート**: WordPressの標準アイコンフォントを確実に読み込み
+- **フォールバック対応**: メディアやアイコンが読み込めない場合の代替表示
+
+### 🖼️ メディアライブラリ連携
+- **画像選択**: WordPressメディアライブラリから直接プロフィール画像を選択
+- **リアルタイムプレビュー**: 選択した画像を即座にプレビュー表示
+- **URL直接入力**: 外部画像URLの直接入力にも対応
+
+### 🔗 SNS・外部リンク対応
+- **豊富なアイコン**: 40以上のSNS・サービスに対応したアイコン表示
+- **自動判定**: URLから適切なアイコンを自動選択
+- **rel属性**: 適切な rel="noopener noreferrer me" を自動付与
+
+## インストール
+
+1. プラグインファイルを `/wp-content/plugins/kashiwazaki-seo-author-sd/` ディレクトリにアップロード
+2. WordPress管理画面の「プラグイン」メニューからプラグインを有効化
+3. 「設定」→「著者スキーマ表示設定」から各種設定を行う
+4. 各ユーザーのプロフィール画面で著者情報を入力
+
+## 使い方
+
+### 基本設定
+1. **表示設定**: 著者カードを表示する投稿タイプと位置を選択
+2. **スキーマ設定**: JSON-LDの出力モードと記事タイプを設定
+3. **デザイン**: 表示位置やスタイルをカスタマイズ
+
+### 著者情報の入力
+1. WordPress管理画面の「ユーザー」からプロフィールを編集
+2. 「著者タイプ」を選択（人物/組織/法人）
+3. 選択したタイプに応じて表示される専用フィールドに情報を入力
+4. メディアライブラリから画像を選択またはURL直接入力
+
+### ショートコード使用
+```php
+[ksas_author user_id="1"]           // 特定のユーザーIDを指定
+[ksas_author author="username"]     // ユーザー名を指定
+[ksas_author]                      // 現在の投稿の著者を自動選択
+```
+
+## 設定項目
+
+### 表示設定
+- **対象投稿タイプ**: post, page, カスタム投稿タイプ
+- **表示位置**: 記事上部、記事下部、見出し前、両方
+- **表示ページ**: フロントページ、カテゴリー、タグ、ホーム
+
+### スキーマ設定
+- **出力モード**: author_simple, author_detailed, person_ref, none
+- **記事タイプ**: Article, NewsArticle, BlogPosting, WebPage
+- **リンクプロパティ**: author, editor, contributor, creator等
+
+### 著者フィールド（タイプ別）
+
+#### 人物タイプ
+- 表示名、顔写真、職業・肩書き、所属組織
+- 別名、連絡先メール、プロフィールリンク
+- プロフィール文、SNS・ウェブサイトURL
+
+#### 組織・法人タイプ
+- 組織名・法人名、ロゴ画像、代替名
+- 連絡先メール、公式サイトURL
+- 概要・事業内容、関連リンク
+
+## 対応SNS・サービス
+
+Facebook, X (Twitter), Instagram, LinkedIn, YouTube, Pinterest, GitHub, GitLab, Medium, note.com, Qiita, Zenn, はてなブログ, LINE, TikTok, Discord, Mastodon, Threads, Behance, Dribbble, SoundCloud, Spotify, Amazon, Wikipedia, Google Scholar 他40以上
+
+## 技術仕様
+
+- **WordPress**: 5.0以降
+- **PHP**: 7.4以降
+- **依存関係**: Dashicons（WordPress標準）
+- **CSS**: テーマ非依存設計
+- **JavaScript**: jQuery（WordPress標準）
+
+## 更新履歴
+
+### Version 1.0.3 (2024-XX-XX)
+- **NEW**: 著者タイプ別の個別データ管理機能
+- **NEW**: メディアライブラリからの画像選択機能
+- **FIX**: テーマCSS干渉問題の完全解決
+- **FIX**: GitHubアイコンの表示問題を修正
+- **FIX**: Undefinedエラーの修正
+- **IMPROVE**: UI/UX改善（リアルタイムプレビュー、動的フィールド切り替え）
+
+### Version 1.0.2 (2024-XX-XX)
+- 基本機能の実装と安定性向上
+
+### Version 1.0.1 (2024-XX-XX)
+- 初回リリース
+
+## ライセンス
+
+GPL-2.0-or-later
+
+このプラグインは GNU General Public License v2 またはそれ以降のバージョンの下で配布されています。
+
+## サポート・開発者
+
+**開発者**: 柏崎剛 (Tsuyoshi Kashiwazaki)  
+**ウェブサイト**: https://www.tsuyoshikashiwazaki.jp/  
+**サポート**: プラグインに関するご質問や不具合報告は、開発者ウェブサイトまでお問い合わせください。
+
+## 貢献
+
+バグ報告、機能提案、プルリクエストを歓迎します。より良いプラグインにするため、皆様のフィードバックをお待ちしています。
+
+---
+
+**Keywords**: WordPress, SEO, Schema.org, JSON-LD, Author, E-A-T, Rich Results, 著者情報, 構造化データ
