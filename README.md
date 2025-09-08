@@ -1,6 +1,11 @@
-# Kashiwazaki SEO Author Schema Display
+# 🚀 Kashiwazaki SEO Author Schema Display
 
-WordPressプラグイン「Kashiwazaki SEO Author Schema Display」は、著者カード（顔写真・肩書・SNS等）を記事上下に自動表示し、Article・NewsArticle・BlogPosting・WebPage＋Role・Person の JSON‑LD を生成、E‑E‑A‑Tとリッチリザルトを一括強化するオールインワン SEO プラグインです。
+[![WordPress](https://img.shields.io/badge/WordPress-5.0%2B-blue.svg)](https://wordpress.org/)
+[![PHP](https://img.shields.io/badge/PHP-7.4%2B-purple.svg)](https://php.net/)
+[![License](https://img.shields.io/badge/License-GPL--2.0--or--later-green.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
+[![Version](https://img.shields.io/badge/Version-1.0.3-orange.svg)](https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-author-sd/releases)
+
+WordPressプラグイン「**Kashiwazaki SEO Author Schema Display**」は、著者カード（顔写真・肩書・SNS等）を記事上下に自動表示し、Article・NewsArticle・BlogPosting・WebPage＋Role・Person の JSON‑LD を生成、**E‑E‑A‑T**と**リッチリザルト**を一括強化するオールインワン SEO プラグインです。
 
 ## 主な機能
 
