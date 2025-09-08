@@ -101,7 +101,7 @@ Facebook, X (Twitter), Instagram, LinkedIn, YouTube, Pinterest, GitHub, GitLab, 
 
 ## 更新履歴
 
-### Version 1.0.3 (2024-XX-XX)
+### Version 1.0.3
 - **NEW**: 著者タイプ別の個別データ管理機能
 - **NEW**: メディアライブラリからの画像選択機能
 - **FIX**: テーマCSS干渉問題の完全解決
@@ -109,10 +109,10 @@ Facebook, X (Twitter), Instagram, LinkedIn, YouTube, Pinterest, GitHub, GitLab, 
 - **FIX**: Undefinedエラーの修正
 - **IMPROVE**: UI/UX改善（リアルタイムプレビュー、動的フィールド切り替え）
 
-### Version 1.0.2 (2024-XX-XX)
+### Version 1.0.2
 - 基本機能の実装と安定性向上
 
-### Version 1.0.1 (2024-XX-XX)
+### Version 1.0.1
 - 初回リリース
 
 ## ライセンス

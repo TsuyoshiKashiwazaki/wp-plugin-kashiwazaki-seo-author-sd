@@ -86,3 +86,11 @@ jspm_packages/
 
 # Yarn Integrity file
 .yarn-integrity
+
+# GitHub CLI and other downloaded tools
+gh_*/
+gh.tar.gz
+*.tar.gz
+*.zip
+*.rar
+*.7z

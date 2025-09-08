@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.3] - 2024-12-XX
+## [1.0.3]
 
 ### Added
 - **著者タイプ別データ管理**: 人物、組織、法人それぞれに専用のフィールドで個別管理
@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **入力値検証強化**: 新フィールドに対する適切なサニタイゼーション
 - **XSS対策**: 出力時のエスケープ処理改善
 
-## [1.0.2] - 2024-11-XX
+## [1.0.2]
 
 ### Added
 - 基本的な著者カード表示機能
@@ -41,7 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 初期バージョンの安定性向上
 - 基本的なバグ修正
 
-## [1.0.1] - 2024-10-XX
+## [1.0.1]
 
 ### Added
 - 初回リリース

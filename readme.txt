@@ -79,9 +79,6 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 はい、利用可能です。ただし、他のSEOプラグインが `Article` や `BlogPosting` などのスキーマを出力している場合、構造化データが重複し、Googleから正しく評価されない可能性があります。
 その場合は、どちらかのプラグインでスキーマ出力を無効にしてください。本プラグインでスキーマ出力を止めるには、スキーマ設定を「スキーマを出力しない」に設定します。
 
-== Screenshots ==
-
-Screenshots are coming soon.
 
 == Disclaimer (免責事項) ==
 
