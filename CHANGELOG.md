@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.4] - 2025-09-09
+
+### Fixed
+- **WordPress公式対応**: Plugin Check要件への完全対応
+- **Text Domain統一**: プラグインスラグ（kashiwazaki-seo-author-sd）への統一  
+- **フロントページ表示問題**: 設定無視でフロントページに表示される重大な不具合を完全解決
+- **重複ロジック統一**: 固定フロントページとホームページの表示判定を一本化
+- **多言語対応基盤**: 必要な`/languages`ディレクトリの作成
+- **意味のない設定削除**: カテゴリページ・タグページ著者表示設定の削除
+- **ショートコードCSS**: `do_shortcode('[ksas_author]')`使用時のスタイル適用問題を解決
+- **WordPress.orgアイコン**: `profiles.wordpress.org`を含むWordPressサイトのアイコン対応
+- **セキュリティ強化**: 出力エスケープとユーザー入力サニタイゼーションの完全対応
+- **プロフィール切り替え**: 著者タイプ変更時のフィールド表示切り替え機能の修正
+
+### Improved
+- **設定UI改善**: ホームページ設定をメニュー最上位に移動し、直感的操作を実現
+- **WordPress 6.8対応**: 最新WordPressでの動作確認完了
+- **タグ制限対応**: WordPress.org要件に準拠し、タグを5個に制限
+- **データベース最適化**: 不要な`ksas_display_on_front_page`、`ksas_display_on_category`、`ksas_display_on_tag`オプションの自動削除
+- **コード品質**: WordPress Coding Standardsへの完全準拠
+
+### Security
+- **XSS対策**: すべての出力にエスケープ処理を適用
+- **入力検証**: `$_POST`データの適切なサニタイゼーションとアンスラッシュ
+- **SQL最適化**: データベースクエリの最適化とコメント追加
+
+### Changed
+- **設定項目統合**: 「トップページ (固定フロントページ)」を「ホームページ」に統一
+- **表示制御改善**: より厳密なページ判定ロジックの実装
+- **翻訳ロード削除**: WordPress 4.6以降の自動翻訳ロード機能を活用
+- **WordPress関数使用**: `date()` → `gmdate()`、`strip_tags()` → `wp_strip_all_tags()`
+
 ## [1.0.3]
 
 ### Added

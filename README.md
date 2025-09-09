@@ -3,7 +3,7 @@
 [![WordPress](https://img.shields.io/badge/WordPress-5.0%2B-blue.svg)](https://wordpress.org/)
 [![PHP](https://img.shields.io/badge/PHP-7.4%2B-purple.svg)](https://php.net/)
 [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-green.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
-[![Version](https://img.shields.io/badge/Version-1.0.3-orange.svg)](https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-author-sd/releases)
+[![Version](https://img.shields.io/badge/Version-1.0.4-orange.svg)](https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-author-sd/releases)
 
 WordPressプラグイン「**Kashiwazaki SEO Author Schema Display**」は、著者カード（顔写真・肩書・SNS等）を記事上下に自動表示し、Article・NewsArticle・BlogPosting・WebPage＋Role・Person の JSON‑LD を生成、**E‑E‑A‑T**と**リッチリザルト**を一括強化するオールインワン SEO プラグインです。
 
@@ -105,6 +105,21 @@ Facebook, X (Twitter), Instagram, LinkedIn, YouTube, Pinterest, GitHub, GitLab, 
 - **JavaScript**: jQuery（WordPress標準）
 
 ## 更新履歴
+
+### Version 1.0.4 (2025-09-09)
+- **FIX**: WordPress公式リポジトリのPlugin Check要件に完全対応
+- **FIX**: Text Domainをプラグインスラグに統一し、翻訳機能を改善
+- **FIX**: 固定フロントページ表示ロジックの重複問題を解決
+- **FIX**: ホームページ設定が正しく反映されない不具合を完全修正
+- **FIX**: カテゴリ・タグページの意味のない著者表示設定を削除
+- **FIX**: ショートコード使用時のCSS適用問題を解決
+- **FIX**: WordPress.orgサイトのアイコン表示を改善
+- **FIX**: 著者タイプ切り替え時のフィールド表示問題を修正
+- **SECURITY**: XSS対策とユーザー入力サニタイゼーションを強化
+- **IMPROVE**: 設定UI改善 - ホームページ設定を最上位に移動
+- **IMPROVE**: WordPress 6.8対応確認済み
+- **IMPROVE**: WordPress Coding Standardsへの完全準拠
+- **IMPROVE**: 多言語対応の基盤整備（/languagesディレクトリ作成）
 
 ### Version 1.0.3
 - **NEW**: 著者タイプ別の個別データ管理機能

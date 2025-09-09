@@ -20,14 +20,14 @@ function ksas_profile_fields( $user ) {
 		$current_author_type = get_user_meta( $user->ID, 'asd_author_type', true ) ?: 'person';
 		?>
 		<tr>
-			<th><label for="asd_author_type"><?php echo esc_html__( '著者タイプ', 'kashiwazaki-seo-asd' ); ?></label></th>
+			<th><label for="asd_author_type"><?php echo esc_html__( '著者タイプ', 'kashiwazaki-seo-author-sd' ); ?></label></th>
 			<td>
 				<select name="asd_author_type" id="asd_author_type">
 					<?php foreach ( $author_types as $type_value => $type_label ) : ?>
 						<option value="<?php echo esc_attr( $type_value ); ?>" <?php selected( $current_author_type, $type_value ); ?>><?php echo esc_html( $type_label ); ?></option>
 					<?php endforeach; ?>
 				</select>
-				<p class="description"><?php echo esc_html__( '著者の種別を選択します。スキーマの @type や表示項目に影響します。', 'kashiwazaki-seo-asd' ); ?></p>
+				<p class="description"><?php echo esc_html__( '著者の種別を選択します。スキーマの @type や表示項目に影響します。', 'kashiwazaki-seo-author-sd' ); ?></p>
 			</td>
 		</tr>
 		<?php
@@ -74,22 +74,28 @@ function ksas_profile_fields( $user ) {
 			$row_class = '';
 			
 			if ( $visibility === 'common' ) {
-				$row_class = ' class="ksas-profile-field-common"';
-			} elseif ( $visibility === 'person' && $current_author_type !== 'person' ) {
-				$row_style = ' style="display: none;"';
-				$row_class = ' class="ksas-profile-field-person"';
-			} elseif ( $visibility === 'organization' && $current_author_type !== 'organization' ) {
-				$row_style = ' style="display: none;"';
-				$row_class = ' class="ksas-profile-field-organization"';
-			} elseif ( $visibility === 'corporation' && $current_author_type !== 'corporation' ) {
-				$row_style = ' style="display: none;"';
-				$row_class = ' class="ksas-profile-field-corporation"';
+				$row_class = 'ksas-profile-field-common';
+			} elseif ( $visibility === 'person' ) {
+				$row_class = 'ksas-profile-field-person';
+				if ( $current_author_type !== 'person' ) {
+					$row_style = ' style="display: none;"';
+				}
+			} elseif ( $visibility === 'organization' ) {
+				$row_class = 'ksas-profile-field-organization';
+				if ( $current_author_type !== 'organization' ) {
+					$row_style = ' style="display: none;"';
+				}
+			} elseif ( $visibility === 'corporation' ) {
+				$row_class = 'ksas-profile-field-corporation';
+				if ( $current_author_type !== 'corporation' ) {
+					$row_style = ' style="display: none;"';
+				}
 			} else {
-				$row_class = ' class="ksas-profile-field-' . esc_attr( $visibility ) . '"';
+				$row_class = 'ksas-profile-field-' . esc_attr( $visibility );
 			}
 
 			?>
-			<tr<?php echo $row_style; ?><?php echo $row_class; ?>>
+			<tr<?php echo esc_attr( $row_style ); ?><?php if ( $row_class ) echo ' class="' . esc_attr( $row_class ) . '"'; ?>>
 				<th><label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></label></th>
 				<td>
 					<?php if ( 'select' === $type && $key === 'asd_role_type' ) :
@@ -151,25 +157,31 @@ function ksas_profile_fields( $user ) {
 		jQuery(document).ready(function($) {
 			// フィールド表示切り替え機能
 			function toggleProfileFields(selectedType) {
+				console.log('Switching to type:', selectedType);
+				console.log('Person fields found:', $('.ksas-profile-field-person').length);
+				console.log('Organization fields found:', $('.ksas-profile-field-organization').length);
+				console.log('Corporation fields found:', $('.ksas-profile-field-corporation').length);
+				
 				// 全てのタイプ固有フィールドを隠す
-				$('.ksas-profile-field-person').closest('tr').hide();
-				$('.ksas-profile-field-organization').closest('tr').hide();
-				$('.ksas-profile-field-corporation').closest('tr').hide();
+				$('.ksas-profile-field-person').hide();
+				$('.ksas-profile-field-organization').hide();
+				$('.ksas-profile-field-corporation').hide();
 				
 				// 共通フィールドは常に表示
-				$('.ksas-profile-field-common').closest('tr').show();
+				$('.ksas-profile-field-common').show();
 				
 				// 選択されたタイプのフィールドのみ表示
 				if (selectedType === 'person') {
-					$('.ksas-profile-field-person').closest('tr').show();
+					$('.ksas-profile-field-person').show();
 				} else if (selectedType === 'organization') {
-					$('.ksas-profile-field-organization').closest('tr').show();
+					$('.ksas-profile-field-organization').show();
 				} else if (selectedType === 'corporation') {
-					$('.ksas-profile-field-corporation').closest('tr').show();
+					$('.ksas-profile-field-corporation').show();
 				}
 			}
 
 			var initialType = $('#asd_author_type').val();
+			console.log('Initial type:', initialType);
 			toggleProfileFields(initialType);
 
 			$('#asd_author_type').on('change', function() {
@@ -307,7 +319,12 @@ function ksas_save_profile( $user_id ) {
 
 	foreach ( $meta_fields as $key => $type ) {
 		if ( array_key_exists( $key, $_POST ) ) {
-			$raw_value = wp_unslash( $_POST[ $key ] );
+			// Initial sanitization based on expected input type
+			if ( in_array( $type, [ 'textarea_strip', 'textarea_urls' ], true ) ) {
+				$raw_value = sanitize_textarea_field( wp_unslash( $_POST[ $key ] ) );
+			} else {
+				$raw_value = sanitize_text_field( wp_unslash( $_POST[ $key ] ) );
+			}
 			$sanitized_value = '';
 
 			switch ( $type ) {
