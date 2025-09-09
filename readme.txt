@@ -1,10 +1,10 @@
 === Kashiwazaki SEO Author Schema Display ===
 Contributors: tsuyoshikashiwazaki
-Tags: seo, schema, author, json-ld, structured data, e-e-a-t, rich results, author box
+Tags: seo, schema, author, json-ld, structured data
 Requires at least: 5.8
-Tested up to: 6.5
+Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -87,6 +87,16 @@ The author and developer of this plugin, Tsuyoshi Kashiwazaki, is not responsibl
 本プラグインの作者および開発者（柏崎剛）は、本プラグインの使用に起因するいかなる損害や損失についても、一切の責任を負いません。本プラグインの利用は、すべて利用者ご自身の責任において行ってください。本プラグインは、明示または黙示を問わず、いかなる保証も伴わずに「現状有姿」で提供されます。
 
 == Changelog ==
+
+= 1.0.4 =
+* 修正: WordPress公式リポジトリのPlugin Check要件に対応
+* 修正: Text Domainをプラグインスラグ（kashiwazaki-seo-author-sd）に統一
+* 修正: 固定フロントページ表示の重複ロジックを統一し、「ホームページ」設定に一本化
+* 修正: 設定画面でホームページのチェックを外してもフロントページに表示される不具合を完全解決
+* 改善: 設定UI改善 - ホームページ設定をメニュー最上位に移動し、直感的な操作性を向上
+* 改善: WordPress 6.8対応確認済み
+* 改善: タグを5個に制限してWordPress.org要件に準拠
+* 修正: 必要な /languages ディレクトリを作成し、多言語対応の基盤を整備
 
 = 1.0.3 =
 * 新機能: 著者タイプ別データ管理 - 人物、組織、法人それぞれに専用フィールドで個別管理

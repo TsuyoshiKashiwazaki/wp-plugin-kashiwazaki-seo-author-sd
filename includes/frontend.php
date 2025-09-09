@@ -60,14 +60,14 @@ function ksas_render_author_html( int $uid ): string {
 	<section class="ksas-author-status" itemscope itemtype="<?php echo esc_attr( $schema_type_url ); ?>" aria-label="<?php echo esc_attr( $aria_label_section ); ?>">
 		<?php if ($profile_link): ?><meta itemprop="<?php echo esc_attr($url_prop); ?>" content="<?php echo esc_url($profile_link); ?>" /><?php endif; ?>
 		<div class="ksas-header">
-			<?php echo $avatar_html; ?>
+			<?php echo wp_kses_post( $avatar_html ); ?>
 			<div class="ksas-central">
 				<?php if ( $author_type === 'person' && ! empty( $meta['occupation'] ) ) : ?>
 				<p class="ksas-occupation" <?php if ($occupation_prop) echo 'itemprop="'.esc_attr($occupation_prop).'"'; ?>><?php echo esc_html( $meta['occupation'] ); ?></p>
 				<?php endif; ?>
 
 				<p class="ksas-name" itemprop="name">
-					<?php echo $name_html; ?>
+					<?php echo wp_kses_post( $name_html ); ?>
 					<?php if ( ! empty( $meta['alternate'] ) ) : ?>
 						<span class="ksas-alternate" itemprop="alternateName">(<?php echo esc_html( $meta['alternate'] ); ?>)</span>
 					<?php endif; ?>
@@ -84,7 +84,7 @@ function ksas_render_author_html( int $uid ): string {
 			<p class="ksas-bio" itemprop="<?php echo esc_attr($bio_prop); ?>"><?php echo nl2br( esc_html( $meta['bio'] ) ); ?></p>
 		<?php endif; ?>
 		<div class="ksas-bottom">
-			<?php echo $role_badge; ?>
+			<?php echo wp_kses_post( $role_badge ); ?>
 			<div class="ksas-links" role="navigation" aria-label="<?php echo esc_attr( $aria_label_links ); ?>">
 				<?php if ( ! empty( $meta['email'] ) && is_email( $meta['email'] ) ) : ?>
 					<a href="mailto:<?php echo antispambot( esc_attr( $meta['email'] ) ); ?>" class="ksas-icon" title="Email" aria-label="Email" itemprop="<?php echo esc_attr($email_prop); ?>">
@@ -125,6 +125,9 @@ function ksas_get_default_author_id(): int {
 }
 
 function ksas_author_shortcode( $atts ): string {
+	wp_enqueue_style( 'dashicons' );
+	wp_enqueue_style( 'ksas-style', KSAS_ASD_URL . 'assets/style.css', ['dashicons'], KSAS_ASD_VERSION );
+	
 	$atts = shortcode_atts( [
 		'user_id' => 0,
 		'author' => '',
@@ -378,21 +381,12 @@ if ( ! function_exists( 'ksas_output_plugin_schema' ) ) {
 		if ( ! apply_filters( 'ksas_allow_plugin_schema', true ) ) { return; }
 		
 		$enabled_types = get_option( 'ksas_post_types', [] );
-		$display_on_front_page = get_option( 'ksas_display_on_front_page', 0 );
-		$display_on_category = get_option( 'ksas_display_on_category', 0 );
-		$display_on_tag = get_option( 'ksas_display_on_tag', 0 );
 		$display_on_home = get_option( 'ksas_display_on_home', 0 );
 
 		$should_output = false;
-		if ( is_front_page() && is_page() && $display_on_front_page ) {
+		if ( ( is_front_page() || is_home() ) && $display_on_home ) {
 			$should_output = true;
-		} elseif ( is_home() && $display_on_home ) {
-			$should_output = true;
-		} elseif ( is_category() && $display_on_category ) {
-			$should_output = true;
-		} elseif ( is_tag() && $display_on_tag ) {
-			$should_output = true;
-		} elseif ( ! empty( $enabled_types ) && is_singular( $enabled_types ) ) {
+		} elseif ( ! empty( $enabled_types ) && is_singular( $enabled_types ) && ! is_front_page() && ! is_home() ) {
 			$should_output = true;
 		}
 		
@@ -412,10 +406,11 @@ if ( ! function_exists( 'ksas_output_plugin_schema' ) ) {
 			'downloadUrl'=>$plugin_data['PluginURI'] ?? 'https://www.tsuyoshikashiwazaki.jp/',
 			'license'=>$plugin_data['LicenseURI'] ?? 'https://www.gnu.org/licenses/gpl-2.0.html',
 			'offers'=>[ '@type'=>'Offer', 'price'=>'0', 'priceCurrency'=>'JPY' ],
-			'copyrightYear'=>date('Y'),
+			'copyrightYear'=>gmdate('Y'),
 			'copyrightHolder'=>[ '@type'=>'Person', 'name'=>$plugin_data['AuthorName'] ?? 'Tsuyoshi Kashiwazaki', 'url'=>$plugin_data['AuthorURI'] ?? 'https://www.tsuyoshikashiwazaki.jp/' ],
 			'author'=>[ '@type'=>'Person', 'name'=>$plugin_data['AuthorName'] ?? 'Tsuyoshi Kashiwazaki', 'url'=>$plugin_data['AuthorURI'] ?? 'https://www.tsuyoshikashiwazaki.jp/' ],
 		];
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_json_encode output is safe for JSON-LD
 		echo '<script type="application/ld+json" class="ksas-plugin-schema">' . wp_json_encode( $schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT ) . '</script>';
 	}
 }
@@ -432,29 +427,21 @@ add_action( 'wp_head', function () {
 		return;
 	}
 
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Function returns safe JSON-LD structured data
 	echo ksas_schema_author_block( $schema_mode );
 }, 5 );
 
 function ksas_should_display_author(): bool {
 	$enabled_types = get_option( 'ksas_post_types', [] );
-	$display_on_front_page = get_option( 'ksas_display_on_front_page', 0 );
-	$display_on_category = get_option( 'ksas_display_on_category', 0 );
-	$display_on_tag = get_option( 'ksas_display_on_tag', 0 );
 	$display_on_home = get_option( 'ksas_display_on_home', 0 );
 
 	if ( ! apply_filters( 'ksas_allow_author_display', true ) ) {
 		return false;
 	}
 
-	if ( is_front_page() && is_page() && $display_on_front_page ) {
+	if ( ( is_front_page() || is_home() ) && $display_on_home ) {
 		return true;
-	} elseif ( is_home() && $display_on_home ) {
-		return true;
-	} elseif ( is_category() && $display_on_category ) {
-		return true;
-	} elseif ( is_tag() && $display_on_tag ) {
-		return true;
-	} elseif ( ! empty( $enabled_types ) && is_singular( $enabled_types ) ) {
+	} elseif ( ! empty( $enabled_types ) && is_singular( $enabled_types ) && ! is_front_page() && ! is_home() ) {
 		return true;
 	}
 
@@ -500,6 +487,11 @@ add_filter( 'the_content', function ( $content ) {
 	
 	$pos = get_option( 'ksas_position', 'top' );
 	
+	// 空のコンテンツでも著者ボックスを表示
+	if ( empty( trim( wp_strip_all_tags( $content ) ) ) ) {
+		return $html;
+	}
+	
 	if ( $pos === 'bottom' ) {
 		return $content . $html;
 	} elseif ( $pos === 'both' ) {
@@ -517,27 +509,24 @@ add_filter( 'the_content', function ( $content ) {
 		// 記事上（デフォルト）
 		return $html . $content;
 	}
-}, 999 );
+}, 1 );
+
 
 
 
 add_action( 'wp_enqueue_scripts', function () {
 	$enabled_types = get_option( 'ksas_post_types', [] );
-	$display_on_front_page = get_option( 'ksas_display_on_front_page', 0 );
-	$display_on_category = get_option( 'ksas_display_on_category', 0 );
-	$display_on_tag = get_option( 'ksas_display_on_tag', 0 );
 	$display_on_home = get_option( 'ksas_display_on_home', 0 );
 
 	$should_enqueue = false;
-	if ( is_front_page() && is_page() && $display_on_front_page ) {
+	if ( ( is_front_page() || is_home() ) && $display_on_home ) {
 		$should_enqueue = true;
-	} elseif ( is_home() && $display_on_home ) {
+	} elseif ( ! empty( $enabled_types ) && is_singular( $enabled_types ) && ! is_front_page() && ! is_home() ) {
 		$should_enqueue = true;
-	} elseif ( is_category() && $display_on_category ) {
-		$should_enqueue = true;
-	} elseif ( is_tag() && $display_on_tag ) {
-		$should_enqueue = true;
-	} elseif ( ! empty( $enabled_types ) && is_singular( $enabled_types ) ) {
+	}
+
+	global $post;
+	if ( ! $should_enqueue && isset( $post->post_content ) && has_shortcode( $post->post_content, 'ksas_author' ) ) {
 		$should_enqueue = true;
 	}
 

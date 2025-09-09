@@ -1,6 +1,6 @@
 # Kashiwazaki SEO Author Schema Display
 
-[![Version](https://img.shields.io/badge/Version-1.0.3-orange.svg)](https://github.com/tsuyoshikashiwazaki/wp-plugin-kashiwazaki-seo-author-sd/releases/tag/v1.0.3)
+[![Version](https://img.shields.io/badge/Version-1.0.4-orange.svg)](https://github.com/tsuyoshikashiwazaki/wp-plugin-kashiwazaki-seo-author-sd/releases/tag/v1.0.4)
 [![WordPress](https://img.shields.io/badge/WordPress-5.8+-blue.svg)](https://wordpress.org/)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://www.php.net/)
 [![License](https://img.shields.io/badge/License-GPLv2-green.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
@@ -74,6 +74,14 @@ The author and developer of this plugin, Tsuyoshi Kashiwazaki, is not responsibl
 本プラグインの作者および開発者（柏崎剛）は、本プラグインの使用に起因するいかなる損害や損失についても、一切の責任を負いません。本プラグインの利用は、すべて利用者ご自身の責任において行ってください。本プラグインは、明示または黙示を問わず、いかなる保証も伴わずに「現状有姿」で提供されます。
 
 ## 変更履歴
+
+### 1.0.4
+* 修正: WordPress公式リポジトリのPlugin Check要件に完全対応（Text Domain統一、WordPress 6.8対応確認）
+* 修正: フロントページ表示の重複ロジックを統一（`ksas_display_on_home` に一本化）
+* 改善: データベースバージョン管理システムの実装（段階的マイグレーション対応）
+* 追加: プラグイン自体のSoftwareApplicationスキーマ出力機能
+* 改善: 設定画面UI改善（ホームページ設定を最上位に配置）
+* 追加: 多言語対応基盤の整備（/languages ディレクトリ作成）
 
 ### 1.0.3
 * 新機能: 著者タイプ別データ管理（Person/Organization/Corporation で異なるフィールドセットを使用、旧フィールドとの後方互換性を維持）

@@ -1,5 +1,21 @@
 # 変更履歴
 
+## [1.0.4] - 2025-09-09
+
+### Fixed
+- WordPress.org Plugin Check要件への完全対応
+- Text Domain をプラグインスラグ（kashiwazaki-seo-author-sd）に統一
+- フロントページ表示設定の重複ロジックを `ksas_display_on_home` に一本化
+
+### Added
+- データベースバージョン管理システム（`ksas_upgrade_database()`）
+- プラグイン自体の SoftwareApplication スキーマ出力機能
+- 多言語対応基盤（/languages ディレクトリ）
+
+### Improved
+- 設定画面UIの改善（ホームページ設定を最上位に配置）
+- WordPress 6.8 対応確認済み
+
 ## [1.0.3] - 2025-08-07
 
 ### Added

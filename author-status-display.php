@@ -1,14 +1,14 @@
 <?php
 /**
  * Plugin Name:  Kashiwazaki SEO Author Schema Display
- * Plugin URI:   https://www.tsuyoshikashiwazaki.jp/
+ * Plugin URI:   https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-author-sd
  * Description:  著者カード（顔写真・肩書・SNS 等）を記事上下に自動表示し、Article・NewsArticle・BlogPosting・WebPage＋Role・Person の JSON‑LD を生成、E‑E‑A‑Tとリッチリザルトを一括強化するオールインワン SEO プラグイン。
- * Version:      1.0.3
+ * Version:      1.0.4
  * Author:       柏崎剛 (Tsuyoshi Kashiwazaki)
- * Author URI:   https://www.tsuyoshikashiwazaki.jp/
+ * Author URI:   https://www.tsuyoshikashiwazaki.jp/profile/
  * License:      GPL-2.0-or-later
  * License URI:  https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:  kashiwazaki-seo-asd
+ * Text Domain:  kashiwazaki-seo-author-sd
  * Domain Path:  /languages
  *
  * @package Kashiwazaki_Seo_Author_Schema_Display
@@ -16,7 +16,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
-define( 'KSAS_ASD_VERSION', '1.0.3' );
+define( 'KSAS_ASD_VERSION', '1.0.4' );
 define( 'KSAS_ASD_PATH', plugin_dir_path( __FILE__ ) );
 define( 'KSAS_ASD_URL',  plugin_dir_url( __FILE__ ) );
 define( 'KSAS_ASD_BASENAME', plugin_basename( __FILE__ ) );
@@ -52,15 +52,6 @@ register_activation_hook( __FILE__, function () {
 	if ( get_option( 'ksas_schema_plugin_enable', null ) === null ) {
 		add_option( 'ksas_schema_plugin_enable', 0 );
 	}
-	if ( get_option( 'ksas_display_on_front_page', null ) === null ) {
-		add_option( 'ksas_display_on_front_page', 0 );
-	}
-	if ( get_option( 'ksas_display_on_category', null ) === null ) {
-		add_option( 'ksas_display_on_category', 0 );
-	}
-	if ( get_option( 'ksas_display_on_tag', null ) === null ) {
-		add_option( 'ksas_display_on_tag', 0 );
-	}
 	if ( get_option( 'ksas_display_on_home', null ) === null ) {
 		add_option( 'ksas_display_on_home', 0 );
 	}
@@ -78,6 +69,7 @@ function ksas_upgrade_database() {
 	
 	if ( version_compare( $current_version, '1.0.2', '<' ) ) {
 		// バージョン1.0.2へのアップグレード: タイプ別フィールドへの移行
+		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Necessary for data migration, runs only during plugin upgrade
 		$users = get_users( [ 'meta_key' => 'asd_author_type' ] );
 		
 		foreach ( $users as $user ) {
@@ -118,11 +110,15 @@ function ksas_upgrade_database() {
 		// 特別なデータベース変更は不要のため、バージョン番号のみ更新
 		update_option( 'ksas_db_version', '1.0.3' );
 	}
+	
+	if ( version_compare( $current_version, '1.0.4', '<' ) ) {
+		// バージョン1.0.4へのアップグレード: ホームページ設定統一とPlugin Check対応
+		// ksas_display_on_front_page オプションを削除（ホームページ設定に統一）
+		delete_option( 'ksas_display_on_front_page' );
+		update_option( 'ksas_db_version', '1.0.4' );
+	}
 }
 
-add_action( 'plugins_loaded', function() {
-	load_plugin_textdomain( 'kashiwazaki-seo-asd', false, dirname( KSAS_ASD_BASENAME ) . '/languages/' );
-});
 
 /**
  * Handles plugin uninstallation.
@@ -137,9 +133,6 @@ function ksas_asd_uninstall() {
 		'ksas_link_props',
 		'ksas_article_anchor',
 		'ksas_schema_plugin_enable',
-		'ksas_display_on_front_page',
-		'ksas_display_on_category',
-		'ksas_display_on_tag',
 		'ksas_display_on_home',
 	];
 	foreach ( $options_to_delete as $option_name ) {
