@@ -126,7 +126,7 @@ function ksas_get_default_author_id(): int {
 
 function ksas_author_shortcode( $atts ): string {
 	wp_enqueue_style( 'dashicons' );
-	wp_enqueue_style( 'ksas-style', KSAS_ASD_URL . 'assets/style.css', ['dashicons'], KSAS_ASD_VERSION );
+	wp_enqueue_style( 'ksas-style', KSAS_ASD_URL . 'assets/style.css', ['dashicons'], filemtime( KSAS_ASD_PATH . 'assets/style.css' ) );
 	
 	$atts = shortcode_atts( [
 		'user_id' => 0,
@@ -496,15 +496,112 @@ add_filter( 'the_content', function ( $content ) {
 		return $content . $html;
 	} elseif ( $pos === 'both' ) {
 		return $html . $content . $html;
-	} elseif ( in_array( $pos, ['h1', 'h2', 'h3', 'h4'], true ) ) {
+	} elseif ( in_array( $pos, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'], true ) ) {
 		// 見出しタグの直前に挿入
 		$pattern = '/<(' . $pos . ')[^>]*>/i';
 		if ( preg_match( $pattern, $content ) ) {
 			return preg_replace( $pattern, $html . '$0', $content, 1 );
 		} else {
-			// 指定した見出しが見つからない場合は記事上に表示
 			return $html . $content;
 		}
+	} elseif ( in_array( $pos, ['h1_after', 'h2_after', 'h3_after', 'h4_after', 'h5_after', 'h6_after'], true ) ) {
+		// 見出しタグの直後に挿入
+		$tag = str_replace( '_after', '', $pos );
+		$pattern = '/<' . $tag . '[^>]*>.*?<\/' . $tag . '>/is';
+		if ( preg_match( $pattern, $content ) ) {
+			return preg_replace( $pattern, '$0' . $html, $content, 1 );
+		} else {
+			return $html . $content;
+		}
+	} elseif ( $pos === 'first_p_after' ) {
+		// 最初の段落の直後
+		if ( preg_match( '/<p[^>]*>.*?<\/p>/is', $content ) ) {
+			return preg_replace( '/<p[^>]*>.*?<\/p>/is', '$0' . $html, $content, 1 );
+		} else {
+			return $html . $content;
+		}
+	} elseif ( $pos === 'second_p_after' ) {
+		// 2番目の段落の直後
+		if ( preg_match_all( '/<p[^>]*>.*?<\/p>/is', $content, $matches, PREG_OFFSET_CAPTURE ) ) {
+			if ( isset( $matches[0][1] ) ) {
+				$offset = $matches[0][1][1] + strlen( $matches[0][1][0] );
+				return substr_replace( $content, $html, $offset, 0 );
+			}
+		}
+		return $html . $content;
+	} elseif ( $pos === 'third_p_after' ) {
+		// 3番目の段落の直後
+		if ( preg_match_all( '/<p[^>]*>.*?<\/p>/is', $content, $matches, PREG_OFFSET_CAPTURE ) ) {
+			if ( isset( $matches[0][2] ) ) {
+				$offset = $matches[0][2][1] + strlen( $matches[0][2][0] );
+				return substr_replace( $content, $html, $offset, 0 );
+			}
+		}
+		return $html . $content;
+	} elseif ( $pos === 'before_last_p' ) {
+		// 最後の段落の直前
+		if ( preg_match_all( '/<p[^>]*>.*?<\/p>/is', $content, $matches, PREG_OFFSET_CAPTURE ) ) {
+			$last_p = end( $matches[0] );
+			if ( $last_p ) {
+				return substr_replace( $content, $html, $last_p[1], 0 );
+			}
+		}
+		return $html . $content;
+	} elseif ( $pos === 'last_p_after' ) {
+		// 最後の段落の直後
+		if ( preg_match_all( '/<p[^>]*>.*?<\/p>/is', $content, $matches, PREG_OFFSET_CAPTURE ) ) {
+			$last_p = end( $matches[0] );
+			if ( $last_p ) {
+				$offset = $last_p[1] + strlen( $last_p[0] );
+				return substr_replace( $content, $html, $offset, 0 );
+			}
+		}
+		return $content . $html;
+	} elseif ( $pos === 'first_image_after' ) {
+		// 最初の画像の直後
+		if ( preg_match( '/<img[^>]*>/i', $content ) ) {
+			return preg_replace( '/<img[^>]*>/i', '$0' . $html, $content, 1 );
+		} else {
+			return $html . $content;
+		}
+	} elseif ( $pos === 'first_blockquote_after' ) {
+		// 最初の引用の直後
+		if ( preg_match( '/<blockquote[^>]*>.*?<\/blockquote>/is', $content ) ) {
+			return preg_replace( '/<blockquote[^>]*>.*?<\/blockquote>/is', '$0' . $html, $content, 1 );
+		} else {
+			return $html . $content;
+		}
+	} elseif ( $pos === 'first_list_after' ) {
+		// 最初のリストの直後
+		if ( preg_match( '/<(ul|ol)[^>]*>.*?<\/\1>/is', $content ) ) {
+			return preg_replace( '/<(ul|ol)[^>]*>.*?<\/\1>/is', '$0' . $html, $content, 1 );
+		} else {
+			return $html . $content;
+		}
+	} elseif ( $pos === 'first_table_after' ) {
+		// 最初のテーブルの直後
+		if ( preg_match( '/<table[^>]*>.*?<\/table>/is', $content ) ) {
+			return preg_replace( '/<table[^>]*>.*?<\/table>/is', '$0' . $html, $content, 1 );
+		} else {
+			return $html . $content;
+		}
+	} elseif ( $pos === 'after_more_tag' ) {
+		// <!--more-->タグの直後
+		if ( preg_match( '/<!--more(.*?)-->/i', $content ) ) {
+			return preg_replace( '/<!--more(.*?)-->/i', '$0' . $html, $content, 1 );
+		} else {
+			return $html . $content;
+		}
+	} elseif ( $pos === 'last_tag_after' ) {
+		// 最後のHTMLタグの直後
+		if ( preg_match_all( '/<\/([a-zA-Z][a-zA-Z0-9]*)\s*>/', $content, $matches, PREG_OFFSET_CAPTURE ) ) {
+			$last_tag = end( $matches[0] );
+			if ( $last_tag ) {
+				$offset = $last_tag[1] + strlen( $last_tag[0] );
+				return substr_replace( $content, $html, $offset, 0 );
+			}
+		}
+		return $content . $html;
 	} else {
 		// 記事上（デフォルト）
 		return $html . $content;
@@ -532,5 +629,5 @@ add_action( 'wp_enqueue_scripts', function () {
 
 	if ( ! $should_enqueue ) { return; }
 	wp_enqueue_style( 'dashicons' );
-	wp_enqueue_style( 'ksas-style', KSAS_ASD_URL . 'assets/style.css', ['dashicons'], KSAS_ASD_VERSION );
+	wp_enqueue_style( 'ksas-style', KSAS_ASD_URL . 'assets/style.css', ['dashicons'], filemtime( KSAS_ASD_PATH . 'assets/style.css' ) );
 }, 10 );

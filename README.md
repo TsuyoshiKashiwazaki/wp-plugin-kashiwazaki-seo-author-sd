@@ -1,6 +1,6 @@
 # Kashiwazaki SEO Author Schema Display
 
-[![Version](https://img.shields.io/badge/Version-1.0.4-orange.svg)](https://github.com/tsuyoshikashiwazaki/wp-plugin-kashiwazaki-seo-author-sd/releases/tag/v1.0.4)
+[![Version](https://img.shields.io/badge/Version-1.0.5--dev-orange.svg)](https://github.com/tsuyoshikashiwazaki/wp-plugin-kashiwazaki-seo-author-sd/releases/tag/v1.0.5-dev)
 [![WordPress](https://img.shields.io/badge/WordPress-5.8+-blue.svg)](https://wordpress.org/)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://www.php.net/)
 [![License](https://img.shields.io/badge/License-GPLv2-green.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
@@ -75,7 +75,17 @@ The author and developer of this plugin, Tsuyoshi Kashiwazaki, is not responsibl
 
 ## 変更履歴
 
-### 1.0.4
+### 1.0.5 (2025-10-08)
+* 新機能: 著者ボックス表示位置を大幅拡張（7パターン → 27パターン）
+* 新機能: h5/h6の前後、段落ベース（最初/2番目/3番目/最後の段落の前後）、特殊要素（画像/引用/リスト/テーブル）の直後に表示可能
+* 新機能: 設定画面のタブ化（表示設定/スキーマ設定/ショートコード）
+* 新機能: 著者タイプ選択時の動的説明文表示機能
+* 改善: UI改善（「著者データ入力」→「著者情報を編集」、「設定」→「基本設定」）
+* 改善: プロフィール編集画面と基本設定画面間の相互リンク実装
+* 改善: 表示位置選択UIをグループ分けして可読性向上
+* 修正: JavaScript/CSSファイルのキャッシュバスティング実装（filemtime使用）
+
+### 1.0.4 (2025-09-09)
 * 修正: WordPress公式リポジトリのPlugin Check要件に完全対応（Text Domain統一、WordPress 6.8対応確認）
 * 修正: フロントページ表示の重複ロジックを統一（`ksas_display_on_home` に一本化）
 * 改善: データベースバージョン管理システムの実装（段階的マイグレーション対応）
@@ -83,21 +93,21 @@ The author and developer of this plugin, Tsuyoshi Kashiwazaki, is not responsibl
 * 改善: 設定画面UI改善（ホームページ設定を最上位に配置）
 * 追加: 多言語対応基盤の整備（/languages ディレクトリ作成）
 
-### 1.0.3
+### 1.0.3 (2025-08-07)
 * 新機能: 著者タイプ別データ管理（Person/Organization/Corporation で異なるフィールドセットを使用、旧フィールドとの後方互換性を維持）
 * 新機能: プロフィール画像/ロゴ選択用のメディアライブラリ統合（画像プレビュー機能付き）
 * 改善: テーマ非依存のスタイル実装（!important ルールによる競合防止）
 * 追加: `ksas_get_author_data_by_type()` ヘルパー関数による統一的なデータ取得
 
-### 1.0.2
+### 1.0.2 (2025-06-25)
 * 新機能: カテゴリページとタグページでの著者ボックス表示に対応
 * 新機能: ショートコード `[ksas_author]` を追加（任意の場所に著者ボックスを表示可能）
 * 改善: 著者ボックスの表示位置を調整（他のプラグインとの競合を軽減）
 * 改善: カテゴリ・タグページでのスキーマ生成に対応
 
-### 1.0.1
+### 1.0.1 (2025-06-12)
 * 修正: 設定画面で「著者ボックスを表示するページ」のチェックをすべて外しても、個別投稿ページで機能が意図せず動作してしまう重大な不具合を修正しました。(`is_singular()`関数に起因する問題への対応)
 * 改善: 意図しない動作を防ぐため、各種機能の実行条件判定ロジックを強化し、安定性を向上させました。
 
-### 1.0.0
+### 1.0.0 (2025-06-08)
 * Initial public release.

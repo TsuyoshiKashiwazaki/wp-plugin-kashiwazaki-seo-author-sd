@@ -3,7 +3,7 @@
  * Plugin Name:  Kashiwazaki SEO Author Schema Display
  * Plugin URI:   https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-author-sd
  * Description:  著者カード（顔写真・肩書・SNS 等）を記事上下に自動表示し、Article・NewsArticle・BlogPosting・WebPage＋Role・Person の JSON‑LD を生成、E‑E‑A‑Tとリッチリザルトを一括強化するオールインワン SEO プラグイン。
- * Version:      1.0.4
+ * Version:      1.0.5
  * Author:       柏崎剛 (Tsuyoshi Kashiwazaki)
  * Author URI:   https://www.tsuyoshikashiwazaki.jp/profile/
  * License:      GPL-2.0-or-later
@@ -16,7 +16,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
-define( 'KSAS_ASD_VERSION', '1.0.4' );
+define( 'KSAS_ASD_VERSION', '1.0.5' );
 define( 'KSAS_ASD_PATH', plugin_dir_path( __FILE__ ) );
 define( 'KSAS_ASD_URL',  plugin_dir_url( __FILE__ ) );
 define( 'KSAS_ASD_BASENAME', plugin_basename( __FILE__ ) );
@@ -116,6 +116,12 @@ function ksas_upgrade_database() {
 		// ksas_display_on_front_page オプションを削除（ホームページ設定に統一）
 		delete_option( 'ksas_display_on_front_page' );
 		update_option( 'ksas_db_version', '1.0.4' );
+	}
+
+	if ( version_compare( $current_version, '1.0.5', '<' ) ) {
+		// バージョン1.0.5へのアップグレード: UI改善、表示位置拡張、タブ化
+		// データベース変更は不要のため、バージョン番号のみ更新
+		update_option( 'ksas_db_version', '1.0.5' );
 	}
 }
 

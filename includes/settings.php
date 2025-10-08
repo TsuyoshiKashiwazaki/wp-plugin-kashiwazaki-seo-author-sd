@@ -5,8 +5,8 @@
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 add_filter( 'plugin_action_links_' . KSAS_ASD_BASENAME, function ( $links ) {
-		$settings_link = '<a href="' . esc_url( admin_url( 'admin.php?page=ksas-settings' ) ) . '">' . __( '設定', 'kashiwazaki-seo-author-sd' ) . '</a>';
-		$profile_link = '<a href="' . esc_url( admin_url( 'profile.php' ) ) . '">' . __( '著者データ入力 (自身)', 'kashiwazaki-seo-author-sd' ) . '</a>';
+		$settings_link = '<a href="' . esc_url( admin_url( 'admin.php?page=ksas-settings' ) ) . '">' . __( '基本設定', 'kashiwazaki-seo-author-sd' ) . '</a>';
+		$profile_link = '<a href="' . esc_url( admin_url( 'profile.php#ksas-author-fields' ) ) . '">' . __( '著者情報を編集', 'kashiwazaki-seo-author-sd' ) . '</a>';
 		$users_link = '<a href="' . esc_url( admin_url( 'users.php' ) ) . '">' . __( 'ユーザー一覧', 'kashiwazaki-seo-author-sd' ) . '</a>';
 		array_unshift( $links, $settings_link, $profile_link, $users_link );
 		return $links;
@@ -15,7 +15,7 @@ add_filter( 'plugin_action_links_' . KSAS_ASD_BASENAME, function ( $links ) {
 
 add_action( 'admin_menu', function () {
 	add_menu_page(
-		__( 'Kashiwazaki SEO Author Schema Display 設定', 'kashiwazaki-seo-author-sd' ),
+		__( 'Kashiwazaki SEO Author Schema Display 基本設定', 'kashiwazaki-seo-author-sd' ),
 		__( 'Kashiwazaki SEO Author Schema Display', 'kashiwazaki-seo-author-sd' ),
 		'manage_options',
 		'ksas-settings',
@@ -43,7 +43,14 @@ function ksas_render_settings_page() {
 		update_option( 'ksas_post_types', $valid_post_types ?: [] );
 
 		$position_input = isset( $_POST['ksas_position'] ) ? sanitize_key( wp_unslash( $_POST['ksas_position'] ) ) : 'top';
-		$valid_positions = [ 'top', 'bottom', 'both', 'h1', 'h2', 'h3', 'h4' ];
+		$valid_positions = [
+			'top', 'bottom', 'both',
+			'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+			'h1_after', 'h2_after', 'h3_after', 'h4_after', 'h5_after', 'h6_after',
+			'first_p_after', 'second_p_after', 'third_p_after',
+			'first_image_after', 'first_blockquote_after', 'first_list_after', 'first_table_after',
+			'after_more_tag', 'before_last_p', 'last_p_after', 'last_tag_after'
+		];
 		$valid_position = in_array( $position_input, $valid_positions, true ) ? $position_input : 'top';
 		update_option( 'ksas_position', $valid_position );
 
@@ -95,18 +102,23 @@ function ksas_render_settings_page() {
 	$available_post_types = get_post_types( [ 'public' => true ], 'objects' ); unset( $available_post_types['attachment'] );
 	$prop_labels = ksas_available_link_props();
 
-	wp_enqueue_script( 'ksas-admin-js', KSAS_ASD_URL . 'assets/admin.js', [ 'jquery' ], KSAS_ASD_VERSION, true );
+	wp_enqueue_script( 'ksas-admin-js', KSAS_ASD_URL . 'assets/admin.js', [ 'jquery' ], filemtime( KSAS_ASD_PATH . 'assets/admin.js' ), true );
 	wp_localize_script( 'ksas-admin-js', 'ksasAdminData', [ 'currentSchemaMode' => $current_schema ] );
 	?>
-	<div class="wrap"><h1><?php echo esc_html__( 'Kashiwazaki SEO Author Schema Display – 設定', 'kashiwazaki-seo-author-sd' ); ?></h1>
+	<div class="wrap"><h1><?php echo esc_html__( 'Kashiwazaki SEO Author Schema Display – 基本設定', 'kashiwazaki-seo-author-sd' ); ?></h1>
 		<p class="ksas-admin-links">
-			<a href="<?php echo esc_url( admin_url( 'profile.php' ) ); ?>"><?php echo esc_html__( '著者データ入力 (自身)', 'kashiwazaki-seo-author-sd' ); ?></a>
+			<a href="<?php echo esc_url( admin_url( 'profile.php#ksas-author-fields' ) ); ?>"><?php echo esc_html__( '著者情報を編集', 'kashiwazaki-seo-author-sd' ); ?></a>
 		</p>
 		<p style="font-size: 0.85em; color: #666; margin-top: -0.5em; margin-bottom: 1.5em;">
 			Version <?php echo esc_html( KSAS_ASD_VERSION ); ?>
 		</p>
+		<h2 class="nav-tab-wrapper">
+			<a href="#" class="nav-tab nav-tab-active" data-tab="display-settings"><?php echo esc_html__( '表示設定', 'kashiwazaki-seo-author-sd' ); ?></a>
+			<a href="#" class="nav-tab" data-tab="schema-settings"><?php echo esc_html__( 'スキーマ設定', 'kashiwazaki-seo-author-sd' ); ?></a>
+			<a href="#" class="nav-tab" data-tab="shortcode-info"><?php echo esc_html__( 'ショートコード', 'kashiwazaki-seo-author-sd' ); ?></a>
+		</h2>
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin.php?page=ksas-settings' ) ); ?>"><?php wp_nonce_field( 'ksas_save_settings', 'ksas_settings_nonce' ); ?>
-			<h2 class="nav-tab-wrapper"><a href="#" class="nav-tab nav-tab-active"><?php echo esc_html__( '表示とスキーマ', 'kashiwazaki-seo-author-sd' ); ?></a></h2>
+			<div id="ksas-tab-display-settings" class="ksas-tab-content">
 			<table class="form-table"><tbody>
 				<tr><th scope="row"><?php echo esc_html__( '著者ボックスを表示するページ', 'kashiwazaki-seo-author-sd' ); ?></th><td><fieldset><legend class="screen-reader-text"><span><?php echo esc_html__( '著者ボックスを表示する投稿タイプを選択', 'kashiwazaki-seo-author-sd' ); ?></span></legend>
 					<label style="display:block; margin-bottom: 5px;"><input type="checkbox" name="ksas_display_on_home" value="1" <?php checked( $current_display_on_home, 1 ); ?>> <?php echo esc_html__( 'ホームページ', 'kashiwazaki-seo-author-sd' ); ?></label>
@@ -114,18 +126,56 @@ function ksas_render_settings_page() {
 						<label style="display:block; margin-bottom: 5px;"><input type="checkbox" name="ksas_post_types[]" value="<?php echo esc_attr( $pt->name ); ?>" <?php checked( is_array( $current_post_types ) && in_array( $pt->name, $current_post_types, true ) ); ?>> <?php echo esc_html( $pt->labels->singular_name ); ?> (<code><?php echo esc_html($pt->name); ?></code>)</label>
 					<?php endforeach; ?></fieldset><p class="description"><?php echo esc_html__( '選択したページ・投稿タイプに著者ボックスが自動挿入されます。', 'kashiwazaki-seo-author-sd' ); ?></p></td></tr>
 				<tr><th scope="row"><?php echo esc_html__( '著者ボックスの表示位置', 'kashiwazaki-seo-author-sd' ); ?></th><td><fieldset><legend class="screen-reader-text"><span><?php echo esc_html__( 'コンテンツ内での著者ボックスの位置を選択', 'kashiwazaki-seo-author-sd' ); ?></span></legend>
-					<?php $positions = [
-						'top'=>__( '記事上', 'kashiwazaki-seo-author-sd' ),
-						'bottom'=>__( '記事下', 'kashiwazaki-seo-author-sd' ),
-						'both'=>__( '記事上下両方', 'kashiwazaki-seo-author-sd' ),
-						'h1'=>__( '最初のh1上', 'kashiwazaki-seo-author-sd' ),
-						'h2'=>__( '最初のh2上', 'kashiwazaki-seo-author-sd' ),
-						'h3'=>__( '最初のh3上', 'kashiwazaki-seo-author-sd' ),
-						'h4'=>__( '最初のh4上', 'kashiwazaki-seo-author-sd' ),
+					<?php $position_groups = [
+						'基本' => [
+							'top' => __( '記事上', 'kashiwazaki-seo-author-sd' ),
+							'bottom' => __( '記事下', 'kashiwazaki-seo-author-sd' ),
+							'both' => __( '記事上下両方', 'kashiwazaki-seo-author-sd' ),
+							'last_tag_after' => __( '最後のHTMLタグの直後', 'kashiwazaki-seo-author-sd' ),
+						],
+						'見出しの前' => [
+							'h1' => __( '最初のh1上', 'kashiwazaki-seo-author-sd' ),
+							'h2' => __( '最初のh2上', 'kashiwazaki-seo-author-sd' ),
+							'h3' => __( '最初のh3上', 'kashiwazaki-seo-author-sd' ),
+							'h4' => __( '最初のh4上', 'kashiwazaki-seo-author-sd' ),
+							'h5' => __( '最初のh5上', 'kashiwazaki-seo-author-sd' ),
+							'h6' => __( '最初のh6上', 'kashiwazaki-seo-author-sd' ),
+						],
+						'見出しの後' => [
+							'h1_after' => __( '最初のh1下', 'kashiwazaki-seo-author-sd' ),
+							'h2_after' => __( '最初のh2下', 'kashiwazaki-seo-author-sd' ),
+							'h3_after' => __( '最初のh3下', 'kashiwazaki-seo-author-sd' ),
+							'h4_after' => __( '最初のh4下', 'kashiwazaki-seo-author-sd' ),
+							'h5_after' => __( '最初のh5下', 'kashiwazaki-seo-author-sd' ),
+							'h6_after' => __( '最初のh6下', 'kashiwazaki-seo-author-sd' ),
+						],
+						'段落' => [
+							'first_p_after' => __( '最初の段落の直後', 'kashiwazaki-seo-author-sd' ),
+							'second_p_after' => __( '2番目の段落の直後', 'kashiwazaki-seo-author-sd' ),
+							'third_p_after' => __( '3番目の段落の直後', 'kashiwazaki-seo-author-sd' ),
+							'before_last_p' => __( '最後の段落の直前', 'kashiwazaki-seo-author-sd' ),
+							'last_p_after' => __( '最後の段落の直後', 'kashiwazaki-seo-author-sd' ),
+						],
+						'特殊要素' => [
+							'first_image_after' => __( '最初の画像の直後', 'kashiwazaki-seo-author-sd' ),
+							'first_blockquote_after' => __( '最初の引用の直後', 'kashiwazaki-seo-author-sd' ),
+							'first_list_after' => __( '最初のリストの直後', 'kashiwazaki-seo-author-sd' ),
+							'first_table_after' => __( '最初のテーブルの直後', 'kashiwazaki-seo-author-sd' ),
+							'after_more_tag' => __( '続きを読むタグ (<!--more-->) の直後', 'kashiwazaki-seo-author-sd' ),
+						],
 					]; ?>
-					<?php foreach ( $positions as $value => $label ) : ?>
-					<div style="margin-bottom: 6px;"><label><input type="radio" name="ksas_position" value="<?php echo esc_attr( $value ); ?>" <?php checked( $current_position, $value ); ?>> <?php echo esc_html( $label ); ?></label></div>
+					<?php foreach ( $position_groups as $group_name => $positions ) : ?>
+						<p style="margin: 10px 0 5px 0; font-weight: 600; color: #2271b1;"><?php echo esc_html( $group_name ); ?></p>
+						<?php foreach ( $positions as $value => $label ) : ?>
+						<div style="margin-bottom: 6px; margin-left: 10px;"><label><input type="radio" name="ksas_position" value="<?php echo esc_attr( $value ); ?>" <?php checked( $current_position, $value ); ?>> <?php echo esc_html( $label ); ?></label></div>
+						<?php endforeach; ?>
 					<?php endforeach; ?></fieldset></td></tr>
+			</tbody></table>
+			<?php submit_button( __( '設定を保存', 'kashiwazaki-seo-author-sd' ) ); ?>
+			</div>
+
+			<div id="ksas-tab-schema-settings" class="ksas-tab-content" style="display: none;">
+			<table class="form-table"><tbody>
 				<tr valign="top"><th scope="row"><?php echo esc_html__( '構造化データ（スキーマ）', 'kashiwazaki-seo-author-sd' ); ?></th><td><fieldset><legend class="screen-reader-text"><span><?php echo esc_html__( 'Schema.org 出力モードを選択', 'kashiwazaki-seo-author-sd' ); ?></span></legend>
 					<?php $schema_modes = [ 'none'=>__( 'スキーマを出力しない', 'kashiwazaki-seo-author-sd' ), 'author_simple'=>'<code>author</code>: ' . __( 'Person/Org 直埋め込み', 'kashiwazaki-seo-author-sd' ), 'author_detailed'=>'<code>author</code>: ' . __( 'Role＋Person/Org 参照（推奨）', 'kashiwazaki-seo-author-sd' ), 'person_ref'=>__( 'Person/Org 分離参照 (@id 利用)', 'kashiwazaki-seo-author-sd' ), ]; ?>
 					<?php foreach ( $schema_modes as $value => $label ) : ?><label style="display:block; margin-bottom: 8px;"><input type="radio" class="ksas-schema-radio" name="ksas_schema_mode" value="<?php echo esc_attr( $value ); ?>" <?php checked( $current_schema, $value ); ?>> <?php echo wp_kses_post( $label ); ?></label><?php endforeach; ?>
@@ -155,10 +205,12 @@ function ksas_render_settings_page() {
 				</tr>
 				<tr id="ksas-anchor-row" valign="top" style="<?php echo $current_schema !== 'person_ref' ? 'display: none;' : ''; ?>"><th scope="row"><label for="ksas_article_anchor"><?php echo esc_html__( '記事スキーマのアンカー', 'kashiwazaki-seo-author-sd' ); ?></label></th><td><input type="text" name="ksas_article_anchor" id="ksas_article_anchor" value="<?php echo esc_attr( $current_anchor ); ?>" class="regular-text" style="width: 140px;" placeholder="#Article"><p class="description"><?php echo esc_html__( '「Person/Org 分離参照」モード選択時、Article スキーマの `@id` の末尾に追加するアンカーを指定します (例: `#Article`)。空欄の場合はアンカーは付加されません。', 'kashiwazaki-seo-author-sd' ); ?></p></td></tr>
 				<tr valign="top"><th scope="row"><?php echo esc_html__( 'プラグイン情報スキーマ', 'kashiwazaki-seo-author-sd' ); ?></th><td><fieldset><legend class="screen-reader-text"><span><?php echo esc_html__( 'このプラグイン自身の SoftwareApplication スキーマを出力するかどうか', 'kashiwazaki-seo-author-sd' ); ?></span></legend><label for="ksas_schema_plugin_enable"><input type="checkbox" name="ksas_schema_plugin_enable" id="ksas_schema_plugin_enable" value="1" <?php checked( $current_plugin_schema, 1 ); ?>> <?php echo esc_html__( 'このプラグイン自身の情報 (SoftwareApplication スキーマ) を出力する', 'kashiwazaki-seo-author-sd' ); ?></label><p class="description"><?php echo esc_html__( 'このプラグイン自体の情報を Schema.org を使って出力します。診断やプラグインの紹介に役立ちます。', 'kashiwazaki-seo-author-sd' ); ?></p></fieldset></td></tr>
-			</tbody></table><?php submit_button( __( '設定を保存', 'kashiwazaki-seo-author-sd' ) ); ?>
+			</tbody></table>
+			<?php submit_button( __( '設定を保存', 'kashiwazaki-seo-author-sd' ) ); ?>
+			</div>
 		</form>
-		
-		<h2 class="nav-tab-wrapper"><a href="#" class="nav-tab nav-tab-active"><?php echo esc_html__( 'ショートコード', 'kashiwazaki-seo-author-sd' ); ?></a></h2>
+
+		<div id="ksas-tab-shortcode-info" class="ksas-tab-content" style="display: none;">
 		<div class="card" style="max-width: 100%; margin-top: 1em;">
 			<h3><?php echo esc_html__( 'ショートコードの使用方法', 'kashiwazaki-seo-author-sd' ); ?></h3>
 			<p><?php echo esc_html__( '以下のショートコードを使用して、任意の場所に著者ボックスを表示できます。', 'kashiwazaki-seo-author-sd' ); ?></p>
@@ -215,6 +267,7 @@ function ksas_render_settings_page() {
 			<p style="margin-top: 1em; font-size: 0.9em; color: #666;">
 				<?php echo esc_html__( 'ショートコードは投稿、固定ページ、ウィジェット、テンプレートファイル内で使用できます。テンプレートファイルで使用する場合は必ず上記のようにPHPコードとして記述してください。', 'kashiwazaki-seo-author-sd' ); ?>
 			</p>
+		</div>
 		</div>
 	</div>
 	<?php

@@ -6,8 +6,9 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 function ksas_profile_fields( $user ) {
 	?>
-	<h2>Kashiwazaki SEO Author Schema Display - 著者データ入力</h2>
-	<p>著者ボックスに表示し、スキーママークアップで使用される著者情報を入力します。</p>
+	<h2 id="ksas-author-fields">Kashiwazaki SEO Author Schema Display - 著者データ入力</h2>
+	<p>著者ボックスに表示し、スキーママークアップで使用される著者情報を入力します。
+	<a href="<?php echo esc_url( admin_url( 'admin.php?page=ksas-settings' ) ); ?>">基本設定</a></p>
 	<table class="form-table" role="presentation">
 		<?php
 		wp_nonce_field( 'ksas_save_profile_' . $user->ID, 'ksas_profile_nonce' );
@@ -28,6 +29,17 @@ function ksas_profile_fields( $user ) {
 					<?php endforeach; ?>
 				</select>
 				<p class="description"><?php echo esc_html__( '著者の種別を選択します。スキーマの @type や表示項目に影響します。', 'kashiwazaki-seo-author-sd' ); ?></p>
+				<div class="notice notice-info inline" style="margin: 10px 0 0 0;">
+					<p id="ksas-description-person" style="display: none; margin: 0.5em 0;">
+						<strong><?php echo esc_html__( '人物モード:', 'kashiwazaki-seo-author-sd' ); ?></strong> <?php echo esc_html__( '個人の執筆者・監修者情報を設定します。このユーザーアカウントで投稿した記事に、ここで設定した情報が著者として表示されます。', 'kashiwazaki-seo-author-sd' ); ?>
+					</p>
+					<p id="ksas-description-organization" style="display: none; margin: 0.5em 0;">
+						<strong><?php echo esc_html__( '組織モード:', 'kashiwazaki-seo-author-sd' ); ?></strong> <?php echo esc_html__( '組織の情報を設定します。このユーザーアカウントで投稿した記事に、組織情報が著者として表示されます。（例：編集部、研究チーム等）', 'kashiwazaki-seo-author-sd' ); ?>
+					</p>
+					<p id="ksas-description-corporation" style="display: none; margin: 0.5em 0;">
+						<strong><?php echo esc_html__( '法人モード:', 'kashiwazaki-seo-author-sd' ); ?></strong> <?php echo esc_html__( '法人の情報を設定します。このユーザーアカウントで投稿した記事に、法人情報が著者として表示されます。（例：株式会社○○、NPO法人△△等）', 'kashiwazaki-seo-author-sd' ); ?>
+					</p>
+				</div>
 			</td>
 		</tr>
 		<?php
@@ -161,15 +173,15 @@ function ksas_profile_fields( $user ) {
 				console.log('Person fields found:', $('.ksas-profile-field-person').length);
 				console.log('Organization fields found:', $('.ksas-profile-field-organization').length);
 				console.log('Corporation fields found:', $('.ksas-profile-field-corporation').length);
-				
+
 				// 全てのタイプ固有フィールドを隠す
 				$('.ksas-profile-field-person').hide();
 				$('.ksas-profile-field-organization').hide();
 				$('.ksas-profile-field-corporation').hide();
-				
+
 				// 共通フィールドは常に表示
 				$('.ksas-profile-field-common').show();
-				
+
 				// 選択されたタイプのフィールドのみ表示
 				if (selectedType === 'person') {
 					$('.ksas-profile-field-person').show();
@@ -178,6 +190,10 @@ function ksas_profile_fields( $user ) {
 				} else if (selectedType === 'corporation') {
 					$('.ksas-profile-field-corporation').show();
 				}
+
+				// 説明文も切り替え
+				$('#ksas-description-person, #ksas-description-organization, #ksas-description-corporation').hide();
+				$('#ksas-description-' + selectedType).show();
 			}
 
 			var initialType = $('#asd_author_type').val();
