@@ -472,11 +472,71 @@ function ksas_get_author_box_html(): string {
 }
 
 add_filter( 'the_content', function ( $content ) {
+	// 静的変数で同じ投稿に対して複数回実行されないようにする
+	static $processed_posts = [];
+
+	// 基本条件チェック
 	if ( ! ksas_should_display_author() ) {
 		return $content;
 	}
 
-	if ( ! in_the_loop() || ! is_main_query() ) {
+	if ( ! in_the_loop() ) {
+		return $content;
+	}
+
+	// 管理画面では表示しない
+	if ( is_admin() ) {
+		return $content;
+	}
+
+	// REST APIリクエストでは表示しない
+	if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+		return $content;
+	}
+
+	// AJAXリクエストでは表示しない
+	if ( wp_doing_ajax() ) {
+		return $content;
+	}
+
+	// Cronでは表示しない
+	if ( wp_doing_cron() ) {
+		return $content;
+	}
+
+	// フィードでは表示しない
+	if ( is_feed() ) {
+		return $content;
+	}
+
+	// 埋め込みページでは表示しない
+	if ( is_embed() ) {
+		return $content;
+	}
+
+	// XMLRPCリクエストでは表示しない
+	if ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST ) {
+		return $content;
+	}
+
+	// 複数の条件を組み合わせて判定：
+	// メインクエリである OR (singularページ かつ ループ内 かつ postが存在)
+	global $post;
+	$is_main = is_main_query();
+	$is_valid_singular = is_singular() && in_the_loop() && isset( $post->ID );
+
+	if ( ! $is_main && ! $is_valid_singular ) {
+		return $content;
+	}
+
+	// 同じ投稿で既に処理済みの場合はスキップ（重複防止）
+	$post_id = get_the_ID();
+	if ( isset( $processed_posts[ $post_id ] ) ) {
+		return $content;
+	}
+
+	// 開発者が独自の条件を追加できるフィルターフック
+	if ( ! apply_filters( 'ksas_should_add_author_box_to_content', true, $content, $post_id ) ) {
 		return $content;
 	}
 
@@ -484,6 +544,9 @@ add_filter( 'the_content', function ( $content ) {
 	if ( empty( trim( $html ) ) ) {
 		return $content;
 	}
+
+	// 処理済みとしてマーク
+	$processed_posts[ $post_id ] = true;
 	
 	$pos = get_option( 'ksas_position', 'top' );
 	
@@ -606,7 +669,7 @@ add_filter( 'the_content', function ( $content ) {
 		// 記事上（デフォルト）
 		return $html . $content;
 	}
-}, 1 );
+}, 10 );
 
 
 

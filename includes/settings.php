@@ -99,7 +99,18 @@ function ksas_render_settings_page() {
 	$current_display_on_home = get_option( 'ksas_display_on_home', 0 );
 	$current_display_on_category = get_option( 'ksas_display_on_category', 0 );
 	$current_display_on_tag = get_option( 'ksas_display_on_tag', 0 );
-	$available_post_types = get_post_types( [ 'public' => true ], 'objects' ); unset( $available_post_types['attachment'] );
+	$available_post_types = get_post_types( [ 'public' => true ], 'objects' );
+
+	// attachmentは除外
+	unset( $available_post_types['attachment'] );
+
+	// 各投稿タイプでthe_content()が使われているかチェック
+	foreach ( $available_post_types as $post_type_name => $post_type_obj ) {
+		if ( ! ksas_post_type_uses_the_content( $post_type_name ) ) {
+			unset( $available_post_types[ $post_type_name ] );
+		}
+	}
+
 	$prop_labels = ksas_available_link_props();
 
 	wp_enqueue_script( 'ksas-admin-js', KSAS_ASD_URL . 'assets/admin.js', [ 'jquery' ], filemtime( KSAS_ASD_PATH . 'assets/admin.js' ), true );

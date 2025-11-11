@@ -1,113 +1,182 @@
-# Kashiwazaki SEO Author Schema Display
+# 🚀 Kashiwazaki SEO Author Schema Display
 
-[![Version](https://img.shields.io/badge/Version-1.0.5--dev-orange.svg)](https://github.com/tsuyoshikashiwazaki/wp-plugin-kashiwazaki-seo-author-sd/releases/tag/v1.0.5-dev)
-[![WordPress](https://img.shields.io/badge/WordPress-5.8+-blue.svg)](https://wordpress.org/)
-[![PHP](https://img.shields.io/badge/PHP-7.4+-purple.svg)](https://www.php.net/)
-[![License](https://img.shields.io/badge/License-GPLv2-green.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
+[![WordPress](https://img.shields.io/badge/WordPress-5.0%2B-blue.svg)](https://wordpress.org/)
+[![PHP](https://img.shields.io/badge/PHP-7.4%2B-purple.svg)](https://php.net/)
+[![License](https://img.shields.io/badge/License-GPL--2.0--or--later-green.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
+[![Version](https://img.shields.io/badge/Version-1.0.6-orange.svg)](https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-author-sd/releases)
 
-著者カード（顔写真・肩書・SNS 等）を記事上下に自動表示し、Article・NewsArticle・BlogPosting・WebPage＋Role・Person の JSON‑LD を生成、E‑E‑A‑Tとリッチリザルトを一括強化するオールインワン SEO プラグイン。
-
-## Description
-
-「Kashiwazaki SEO Author Schema Display」は、著者情報を強化することで検索エンジン評価（E-E-A-T）とリッチリザルト対応を向上させる、オールインワンのWordPressプラグインです。
-
-記事の信頼性と専門性を読者と検索エンジンの両方に明確に伝えるための強力な機能を提供します。
+WordPressプラグイン「**Kashiwazaki SEO Author Schema Display**」は、著者カード（顔写真・肩書・SNS等）を記事上下に自動表示し、Article・NewsArticle・BlogPosting・WebPage＋Role・Person の JSON‑LD を生成、**E‑E‑A‑T**と**リッチリザルト**を一括強化するオールインワン SEO プラグインです。
 
 ## 主な機能
 
-### 著者ボックスの自動表示
-記事の上下、またはその両方に、デザイン済みの著者情報ボックスを自動で挿入します。著者名、顔写真（またはロゴ）、肩書き、プロフィール文、SNSリンクなどを分かりやすく表示できます。
+### 🎯 著者情報の自動表示
+- **著者カード**: 顔写真、名前、肩書き、所属組織、プロフィール文、SNSリンクを美しく表示
+- **表示位置**: 記事上部、記事下部、見出しタグ前、または両方に表示可能
+- **レスポンシブ対応**: スマートフォンやタブレットでも適切にレイアウト調整
 
-### 詳細な著者データ入力
-WordPressのユーザープロフィール画面に専用の入力欄を追加。著者が「人物(Person)」「組織(Organization)」「法人(Corporation)」のいずれであるかを選択でき、それぞれに応じた詳細な情報（職業、所属組織、公式サイトURLなど）を設定できます。
+### 👥 著者タイプ別管理
+- **人物 (Person)**: 個人の著者情報（職業、所属組織、プロフィール等）
+- **組織 (Organization)**: 組織の情報（組織名、概要、関連リンク等）
+- **法人 (Corporation)**: 法人の情報（法人名、事業内容、公式サイト等）
 
-### 高度なJSON-LDスキーマ生成
-Googleが推奨する最新の仕様に準拠した構造化データを自動生成します。
+各著者タイプごとに専用のフィールドで管理し、選択されたタイプに応じて適切な情報のみを表示します。
 
-- `Article`, `NewsArticle`, `BlogPosting`, `WebPage` から最適なスキーマタイプを選択可能
-- 著者の役割（執筆者、監修者など）を明確にする `Role` スキーマに対応
-- 他のSEOプラグインとの競合を避けるため、スキーマ出力を無効にするオプションも搭載
+### 📊 Schema.org 対応
+- **JSON-LD**: Article、NewsArticle、BlogPosting、WebPageスキーマを自動生成
+- **Role構造**: author、editor、supervisor等の役割情報を含む詳細な構造化データ
+- **リッチリザルト**: 検索結果での著者情報表示を強化
 
-### 柔軟な表示設定
-著者ボックスを表示する投稿タイプ（投稿、固定ページなど）や、表示位置（記事上/下/両方）を管理画面から簡単に設定できます。
+### 🎨 テーマ独立設計
+- **CSS干渉防止**: `!important`を使用した強固なスタイル定義でテーマCSSの影響を回避
+- **Dashiconsサポート**: WordPressの標準アイコンフォントを確実に読み込み
+- **フォールバック対応**: メディアやアイコンが読み込めない場合の代替表示
 
-このプラグイン一つで、サイトの信頼性向上、専門性の明示、そして検索結果での視認性アップに繋がる施策を包括的に実行できます。
+### 🖼️ メディアライブラリ連携
+- **画像選択**: WordPressメディアライブラリから直接プロフィール画像を選択
+- **リアルタイムプレビュー**: 選択した画像を即座にプレビュー表示
+- **URL直接入力**: 外部画像URLの直接入力にも対応
 
-## Installation
+### 🔗 SNS・外部リンク対応
+- **豊富なアイコン**: 40以上のSNS・サービスに対応したアイコン表示
+- **自動判定**: URLから適切なアイコンを自動選択
+- **rel属性**: 適切な rel="noopener noreferrer me" を自動付与
 
-1. 本プラグインのフォルダを `/wp-content/plugins/` ディレクトリにアップロードするか、WordPressの管理画面から「プラグイン」>「新規追加」で "Kashiwazaki SEO Author Schema Display" を検索してインストールします。
-2. WordPressの「プラグイン」メニューからプラグインを有効化します。
-3. **初期設定を行います。**
-   - **全体設定**: 管理画面のサイドバーに追加される `Kashiwazaki SEO ...` メニューから設定ページにアクセスし、著者ボックスの表示位置やスキーマのモードなどを設定します。
-   - **著者データ入力**: `ユーザー` > `あなたのプロフィール` を開き、「Kashiwazaki SEO Author Schema Display - 著者データ入力」欄に必要な情報を入力します。
+## インストール
 
-## Frequently Asked Questions
+1. プラグインファイルを `/wp-content/plugins/kashiwazaki-seo-author-sd/` ディレクトリにアップロード
+2. WordPress管理画面の「プラグイン」メニューからプラグインを有効化
+3. 「設定」→「著者スキーマ表示設定」から各種設定を行う
+4. 各ユーザーのプロフィール画面で著者情報を入力
 
-### このプラグインの基本的な設定方法は？
+## 使い方
 
-1. **全体設定**: 管理画面メニューの `Kashiwazaki SEO ...` をクリックし、設定ページを開きます。「著者ボックスを表示するページ」や「表示位置」、「構造化データ（スキーマ）」モードなどをサイトの方針に合わせて設定します。
-2. **著者データ入力**: `ユーザー` > `あなたのプロフィール` ページで、ご自身の著者データを入力します。他のユーザーのデータを編集する場合は、`ユーザー` > `ユーザー一覧` から対象ユーザーを選択して編集してください。
+### 基本設定
+1. **表示設定**: 著者カードを表示する投稿タイプと位置を選択
+2. **スキーマ設定**: JSON-LDの出力モードと記事タイプを設定
+3. **デザイン**: 表示位置やスタイルをカスタマイズ
 
-### 「著者タイプ」とは何ですか？
+### 著者情報の入力
+1. WordPress管理画面の「ユーザー」からプロフィールを編集
+2. 「著者タイプ」を選択（人物/組織/法人）
+3. 選択したタイプに応じて表示される専用フィールドに情報を入力
+4. メディアライブラリから画像を選択またはURL直接入力
 
-記事の著者が「人物 (Person)」「組織 (Organization)」「法人 (Corporation)」のどれにあたるかを選択する項目です。ユーザープロフィール編集画面で設定できます。この選択に応じて、生成されるスキーマの型（`@type`）や、プロフィール画面に表示される入力項目（例：「職業」は人物タイプのみ）が自動的に変わります。
+### ショートコード使用
+```php
+[ksas_author user_id="1"]           // 特定のユーザーIDを指定
+[ksas_author author="username"]     // ユーザー名を指定
+[ksas_author]                      // 現在の投稿の著者を自動選択
+```
 
-### 「構造化データ（スキーマ）」の設定がよく分かりません。どれを選べばいいですか？
+## 設定項目
 
-サイトの状況や目的に応じて選択してください。
+### 表示設定
+- **対象投稿タイプ**: post, page, カスタム投稿タイプ
+- **表示位置**: 記事上部、記事下部、見出し前、両方
+- **表示ページ**: フロントページ、カテゴリー、タグ、ホーム
 
-- **スキーマを出力しない**: 他のSEOプラグイン等で既に`Article`スキーマを出力しており、著者ボックスの表示機能だけを使いたい場合に選択します。スキーマの重複を避けることができます。
-- **`author`: Role＋Person/Org 参照（推奨）**: **通常はこちらを選択してください。** 著者の「役割（執筆者、監修者など）」を検索エンジンに明確に伝え、E-E-A-Tシグナルを強化する上で最も効果的なモードです。
-- **`author`: Person/Org 直埋め込み**: 著者情報をシンプルな構造で埋め込みます。
-- **Person/Org 分離参照 (@id 利用)**: `Article`スキーマから著者情報を完全に分離し、`author`以外のプロパティ（例: `reviewedBy`で監修者を示すなど）で関連付けたい上級者向けのモードです。
+### スキーマ設定
+- **出力モード**: author_simple, author_detailed, person_ref, none
+- **記事タイプ**: Article, NewsArticle, BlogPosting, WebPage
+- **リンクプロパティ**: author, editor, contributor, creator等
 
-### 他のSEOプラグインと一緒に使えますか？
+### 著者フィールド（タイプ別）
 
-はい、利用可能です。ただし、他のSEOプラグインが `Article` や `BlogPosting` などのスキーマを出力している場合、構造化データが重複し、Googleから正しく評価されない可能性があります。
+#### 人物タイプ
+- 表示名、顔写真、職業・肩書き、所属組織
+- 別名、連絡先メール、プロフィールリンク
+- プロフィール文、SNS・ウェブサイトURL
 
-その場合は、どちらかのプラグインでスキーマ出力を無効にしてください。本プラグインでスキーマ出力を止めるには、スキーマ設定を「スキーマを出力しない」に設定します。
+#### 組織・法人タイプ
+- 組織名・法人名、ロゴ画像、代替名
+- 連絡先メール、公式サイトURL
+- 概要・事業内容、関連リンク
 
-## Disclaimer (免責事項)
+## 対応SNS・サービス
 
-The author and developer of this plugin, Tsuyoshi Kashiwazaki, is not responsible for any damages or losses that may occur from the use of this plugin. Use this plugin at your own risk. This plugin is provided "as is" without warranty of any kind, expressed or implied.
+Facebook, X (Twitter), Instagram, LinkedIn, YouTube, Pinterest, GitHub, GitLab, Medium, note.com, Qiita, Zenn, はてなブログ, LINE, TikTok, Discord, Mastodon, Threads, Behance, Dribbble, SoundCloud, Spotify, Amazon, Wikipedia, Google Scholar 他40以上
 
-本プラグインの作者および開発者（柏崎剛）は、本プラグインの使用に起因するいかなる損害や損失についても、一切の責任を負いません。本プラグインの利用は、すべて利用者ご自身の責任において行ってください。本プラグインは、明示または黙示を問わず、いかなる保証も伴わずに「現状有姿」で提供されます。
+## 技術仕様
 
-## 変更履歴
+- **WordPress**: 5.0以降
+- **PHP**: 7.4以降
+- **依存関係**: Dashicons（WordPress標準）
+- **CSS**: テーマ非依存設計
+- **JavaScript**: jQuery（WordPress標準）
 
-### 1.0.5 (2025-10-08)
-* 新機能: 著者ボックス表示位置を大幅拡張（7パターン → 27パターン）
-* 新機能: h5/h6の前後、段落ベース（最初/2番目/3番目/最後の段落の前後）、特殊要素（画像/引用/リスト/テーブル）の直後に表示可能
-* 新機能: 設定画面のタブ化（表示設定/スキーマ設定/ショートコード）
-* 新機能: 著者タイプ選択時の動的説明文表示機能
-* 改善: UI改善（「著者データ入力」→「著者情報を編集」、「設定」→「基本設定」）
-* 改善: プロフィール編集画面と基本設定画面間の相互リンク実装
-* 改善: 表示位置選択UIをグループ分けして可読性向上
-* 修正: JavaScript/CSSファイルのキャッシュバスティング実装（filemtime使用）
+## 更新履歴
 
-### 1.0.4 (2025-09-09)
-* 修正: WordPress公式リポジトリのPlugin Check要件に完全対応（Text Domain統一、WordPress 6.8対応確認）
-* 修正: フロントページ表示の重複ロジックを統一（`ksas_display_on_home` に一本化）
-* 改善: データベースバージョン管理システムの実装（段階的マイグレーション対応）
-* 追加: プラグイン自体のSoftwareApplicationスキーマ出力機能
-* 改善: 設定画面UI改善（ホームページ設定を最上位に配置）
-* 追加: 多言語対応基盤の整備（/languages ディレクトリ作成）
+### [1.0.6] - 2025-11-11
+- **NEW**: the_content()を使わない投稿タイプの自動検出機能
+  - template_redirect フックの動的解析
+  - single_template フィルターの動的解析
+  - プラグイン提供テンプレートの自動検出
+- **IMPROVE**: the_content フィルター条件の堅牢性向上
+  - is_main_query() が動作しない環境でも is_singular() でフォールバック
+  - REST API, AJAX, Cron, Feed, Embed, XMLRPC リクエストを除外
+  - is_admin() チェック追加
+- **IMPROVE**: 重複表示防止機能追加（静的変数による処理済み投稿の追跡）
+- **IMPROVE**: 開発者用フィルターフック追加（ksas_should_add_author_box_to_content）
+- **FIX**: 設定画面に表示されるが実際には動作しない投稿タイプの問題を解決
 
-### 1.0.3 (2025-08-07)
-* 新機能: 著者タイプ別データ管理（Person/Organization/Corporation で異なるフィールドセットを使用、旧フィールドとの後方互換性を維持）
-* 新機能: プロフィール画像/ロゴ選択用のメディアライブラリ統合（画像プレビュー機能付き）
-* 改善: テーマ非依存のスタイル実装（!important ルールによる競合防止）
-* 追加: `ksas_get_author_data_by_type()` ヘルパー関数による統一的なデータ取得
+### Version 1.0.5 (2025-10-08)
+- **NEW**: 著者ボックス表示位置を大幅拡張（7パターン → 27パターン）
+  - h5, h6の前後、段落ベース、特殊要素（画像/引用/リスト/テーブル）の直後
+  - 最後の段落の前後、最後のHTMLタグの直後など
+- **NEW**: 基本設定画面をタブ化（表示設定/スキーマ設定/ショートコード）
+- **NEW**: 著者タイプ選択時の動的説明文表示機能
+- **IMPROVE**: UI改善 - 「著者データ入力 (自身)」→「著者情報を編集」
+- **IMPROVE**: UI改善 - 「設定」→「基本設定」に変更
+- **IMPROVE**: プロフィール編集画面から基本設定へのリンク追加
+- **IMPROVE**: 著者情報編集画面へのアンカーリンク実装
+- **FIX**: JavaScript/CSSのキャッシュバスティング実装（filemtime使用）
+- **FIX**: 人物/組織/法人タイプの説明をより分かりやすく改善
 
-### 1.0.2 (2025-06-25)
-* 新機能: カテゴリページとタグページでの著者ボックス表示に対応
-* 新機能: ショートコード `[ksas_author]` を追加（任意の場所に著者ボックスを表示可能）
-* 改善: 著者ボックスの表示位置を調整（他のプラグインとの競合を軽減）
-* 改善: カテゴリ・タグページでのスキーマ生成に対応
+### Version 1.0.4 (2025-09-09)
+- **FIX**: WordPress公式リポジトリのPlugin Check要件に完全対応
+- **FIX**: Text Domainをプラグインスラグに統一し、翻訳機能を改善
+- **FIX**: 固定フロントページ表示ロジックの重複問題を解決
+- **FIX**: ホームページ設定が正しく反映されない不具合を完全修正
+- **FIX**: カテゴリ・タグページの意味のない著者表示設定を削除
+- **FIX**: ショートコード使用時のCSS適用問題を解決
+- **FIX**: WordPress.orgサイトのアイコン表示を改善
+- **FIX**: 著者タイプ切り替え時のフィールド表示問題を修正
+- **SECURITY**: XSS対策とユーザー入力サニタイゼーションを強化
+- **IMPROVE**: 設定UI改善 - ホームページ設定を最上位に移動
+- **IMPROVE**: WordPress 6.8対応確認済み
+- **IMPROVE**: WordPress Coding Standardsへの完全準拠
+- **IMPROVE**: 多言語対応の基盤整備（/languagesディレクトリ作成）
 
-### 1.0.1 (2025-06-12)
-* 修正: 設定画面で「著者ボックスを表示するページ」のチェックをすべて外しても、個別投稿ページで機能が意図せず動作してしまう重大な不具合を修正しました。(`is_singular()`関数に起因する問題への対応)
-* 改善: 意図しない動作を防ぐため、各種機能の実行条件判定ロジックを強化し、安定性を向上させました。
+### Version 1.0.3
+- **NEW**: 著者タイプ別の個別データ管理機能
+- **NEW**: メディアライブラリからの画像選択機能
+- **FIX**: テーマCSS干渉問題の完全解決
+- **FIX**: GitHubアイコンの表示問題を修正
+- **FIX**: Undefinedエラーの修正
+- **IMPROVE**: UI/UX改善（リアルタイムプレビュー、動的フィールド切り替え）
 
-### 1.0.0 (2025-06-08)
-* Initial public release.
+### Version 1.0.2
+- 基本機能の実装と安定性向上
+
+### Version 1.0.1
+- 初回リリース
+
+## ライセンス
+
+GPL-2.0-or-later
+
+このプラグインは GNU General Public License v2 またはそれ以降のバージョンの下で配布されています。
+
+## サポート・開発者
+
+**開発者**: 柏崎剛 (Tsuyoshi Kashiwazaki)  
+**ウェブサイト**: https://www.tsuyoshikashiwazaki.jp/  
+**サポート**: プラグインに関するご質問や不具合報告は、開発者ウェブサイトまでお問い合わせください。
+
+## 貢献
+
+バグ報告、機能提案、プルリクエストを歓迎します。より良いプラグインにするため、皆様のフィードバックをお待ちしています。
+
+---
+
+**Keywords**: WordPress, SEO, Schema.org, JSON-LD, Author, E-A-T, Rich Results, 著者情報, 構造化データ

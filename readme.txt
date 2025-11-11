@@ -4,7 +4,7 @@ Tags: seo, schema, author, json-ld, structured data
 Requires at least: 5.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.0.5
+Stable tag: 1.0.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -87,6 +87,17 @@ The author and developer of this plugin, Tsuyoshi Kashiwazaki, is not responsibl
 本プラグインの作者および開発者（柏崎剛）は、本プラグインの使用に起因するいかなる損害や損失についても、一切の責任を負いません。本プラグインの利用は、すべて利用者ご自身の責任において行ってください。本プラグインは、明示または黙示を問わず、いかなる保証も伴わずに「現状有姿」で提供されます。
 
 == Changelog ==
+
+= 1.0.6 =
+* 新機能: the_content()を使わない投稿タイプの自動検出機能
+* 新機能: template_redirect フックの動的解析でカスタムルーティングを検出
+* 新機能: single_template フィルターの動的解析でプラグイン提供テンプレートを検出
+* 新機能: 開発者向けフィルターフック追加（ksas_should_add_author_box_to_content, ksas_force_exclude_post_type）
+* 改善: the_content フィルター条件の堅牢性向上（is_main_query() と is_singular() のOR条件）
+* 改善: 環境チェックの強化（REST API, AJAX, Cron, Feed, Embed, XMLRPC, 管理画面を除外）
+* 改善: 重複表示防止機能追加（静的変数による処理済み投稿の追跡）
+* 修正: is_main_query() が false を返す環境で著者ボックスが表示されない問題
+* 修正: 設定画面で有効化しても実際には表示されない投稿タイプが選択可能だった問題
 
 = 1.0.5 =
 * 新機能: 著者ボックス表示位置を大幅拡張（7パターン → 27パターン）
