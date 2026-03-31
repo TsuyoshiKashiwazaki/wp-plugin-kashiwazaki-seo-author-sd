@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON-LDスキーマ出力 - Author Schema Display マニュアル</title>
+    <link rel="stylesheet" href="css/style.css?v=1">
+</head>
+<body>
+    <button class="hamburger-btn" aria-label="メニューを開く">&#9776;</button>
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2 style="color:#fff;">Author Schema Display</h2>
+            <span class="version">v1.0.6</span>
+            <img src="images/main-visual.png" alt="" style="width:100%;border-radius:4px;margin-top:8px;">
+        </div>
+        <ul>
+            <li><a href="index.html">概要</a></li>
+            <li><a href="setup.html">インストール・初期設定</a></li>
+            <li><a href="author-box.html">著者ボックス表示</a></li>
+            <li><a href="schema.html">JSON-LDスキーマ出力</a></li>
+            <li><a href="troubleshooting.html">トラブルシューティング</a></li>
+        </ul>
+    </nav>
+    <main class="content">
+        <h1>JSON-LDスキーマ出力</h1>
+
+        <p class="lead">Google検索でのE-E-A-Tシグナルを強化するJSON-LD構造化データの出力機能について解説します。</p>
+
+        <h2>スキーマ出力とは</h2>
+        <p>JSON-LD形式の構造化データをHTMLのhead内に出力し、検索エンジンに著者情報を伝える機能です。Article, NewsArticle, BlogPosting, WebPageの4つのArticleスキーマタイプに対応しています。</p>
+
+        <h2>設定画面</h2>
+        <div class="screenshot">
+            <img src="images/screenshots/02-schema-settings.png" alt="スキーマ設定画面" class="lightbox-trigger">
+        </div>
+
+        <h2>スキーマモードの選択</h2>
+        <p>4つのモードから選択できます。</p>
+
+        <div class="step">
+            <span class="step-number">1</span>
+            <div class="step-body">
+                <p><strong>「スキーマなし」</strong> — JSON-LDを出力しない。他のSEOプラグインがスキーマを出力している場合に選択します。</p>
+            </div>
+        </div>
+        <div class="step">
+            <span class="step-number">2</span>
+            <div class="step-body">
+                <p><strong>「シンプル著者」</strong> — ArticleスキーマのauthorプロパティにPerson/Organizationを直接埋め込みます。最もシンプルな構造です。</p>
+            </div>
+        </div>
+        <div class="step">
+            <span class="step-number">3</span>
+            <div class="step-body">
+                <p><strong>「詳細著者（推奨）」</strong> — Role + Person/Orgの参照構造。E-E-A-Tシグナルとして最も効果的です。著者の役割（執筆者・監修者等）を明示できます。</p>
+            </div>
+        </div>
+        <div class="step">
+            <span class="step-number">4</span>
+            <div class="step-body">
+                <p><strong>「分離参照」</strong> — Person/Orgスキーマを分離し@idでリンクします。10種類のリンクプロパティ（author, editor, contributor, creator, provider, publisher, translator, reviewedBy, accountablePerson, copyrightHolder）から選択可能です。</p>
+            </div>
+        </div>
+
+        <h2>Articleスキーマタイプ</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:35%;">タイプ</th>
+                    <th>用途</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Article</td>
+                    <td>一般的な記事（デフォルト）</td>
+                </tr>
+                <tr>
+                    <td>NewsArticle</td>
+                    <td>ニュース記事</td>
+                </tr>
+                <tr>
+                    <td>BlogPosting</td>
+                    <td>ブログ記事</td>
+                </tr>
+                <tr>
+                    <td>WebPage</td>
+                    <td>一般的なWebページ</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>プラグイン情報スキーマ</h2>
+        <p>チェックボックスで有効化できます。SoftwareApplicationスキーマとしてプラグイン自体の情報をSchema.orgに出力する機能です。</p>
+
+        <div class="callout callout-tip">
+            <p>他のSEOプラグイン（Yoast SEO、Rank Math等）がArticleスキーマを出力している場合は、スキーマの重複に注意してください。「分離参照」モードを使うと、既存のArticleスキーマに影響を与えずにPerson/Orgスキーマのみを追加できます。</p>
+        </div>
+
+        <h2>スキーマ出力モードの比較</h2>
+        <figure class="infographic">
+            <img src="images/infographics/schema-flow.png" alt="スキーマ出力モードの比較">
+            <figcaption>スキーマ出力モードの比較</figcaption>
+        </figure>
+
+        <nav class="page-nav">
+            <a href="author-box.html" class="prev">&laquo; 著者ボックス表示</a>
+            <a href="troubleshooting.html" class="next">トラブルシューティング &raquo;</a>
+        </nav>
+
+        <footer class="manual-footer">
+            <p>作者: <a href="https://www.tsuyoshikashiwazaki.jp/profile/" target="_blank" rel="noopener">柏崎剛（Tsuyoshi Kashiwazaki）</a></p>
+            <p>プラグイン: Kashiwazaki SEO Author Schema Display v1.0.6</p>
+        </footer>
+    </main>
+    <div class="lightbox"></div>
+    <script src="js/manual.js?v=1"></script>
+</body>
+</html>

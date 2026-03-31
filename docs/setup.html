@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>インストール・初期設定 - Author Schema Display マニュアル</title>
+    <link rel="stylesheet" href="css/style.css?v=1">
+</head>
+<body>
+    <button class="hamburger-btn" aria-label="メニューを開く">&#9776;</button>
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2 style="color:#fff;">Author Schema Display</h2>
+            <span class="version">v1.0.6</span>
+            <img src="images/main-visual.png" alt="" style="width:100%;border-radius:4px;margin-top:8px;">
+        </div>
+        <ul>
+            <li><a href="index.html">概要</a></li>
+            <li><a href="setup.html">インストール・初期設定</a></li>
+            <li><a href="author-box.html">著者ボックス表示</a></li>
+            <li><a href="schema.html">JSON-LDスキーマ出力</a></li>
+            <li><a href="troubleshooting.html">トラブルシューティング</a></li>
+        </ul>
+    </nav>
+    <main class="content">
+        <h1>インストール・初期設定</h1>
+
+        <p class="lead">プラグインのインストールから初期設定まで、ステップバイステップで解説します。</p>
+
+        <h2>インストール手順</h2>
+        <div class="step">
+            <span class="step-number">1</span>
+            <div class="step-body">
+                <p>プラグインファイルを <code>/wp-content/plugins/</code> にアップロード</p>
+            </div>
+        </div>
+        <div class="step">
+            <span class="step-number">2</span>
+            <div class="step-body">
+                <p>WordPress管理画面「プラグイン」から有効化</p>
+            </div>
+        </div>
+        <div class="step">
+            <span class="step-number">3</span>
+            <div class="step-body">
+                <p>左メニューに「Kashiwazaki SEO Author Schema Display」が追加される</p>
+            </div>
+        </div>
+
+        <div class="callout callout-tip">
+            <p>メニューは管理画面左サイドバーの「Kashiwazaki SEO Author Schema Display」（ユーザーアイコン）からアクセスできます。</p>
+        </div>
+
+        <h2>管理画面の構成</h2>
+        <div class="screenshot">
+            <img src="images/screenshots/01-settings-page.png" alt="設定画面" class="lightbox-trigger">
+        </div>
+
+        <h3>表示設定タブ</h3>
+        <h4>著者ボックスを表示するページ</h4>
+        <p>投稿タイプのチェックボックスで選択</p>
+
+        <h4>著者ボックスの表示位置</h4>
+        <p>基本（4種）、見出しの前（6種）、見出しの後（6種）、段落（5種）、特殊要素（5種）の27種類</p>
+
+        <h2>プロフィール設定</h2>
+        <div class="screenshot">
+            <img src="images/screenshots/03-profile-fields.png" alt="プロフィール入力欄" class="lightbox-trigger">
+        </div>
+
+        <div class="step">
+            <span class="step-number">1</span>
+            <div class="step-body">
+                <p>ユーザー &gt; プロフィール に移動</p>
+            </div>
+        </div>
+        <div class="step">
+            <span class="step-number">2</span>
+            <div class="step-body">
+                <p>「Kashiwazaki SEO Author Schema Display - 著者データ入力」セクションまでスクロール</p>
+            </div>
+        </div>
+        <div class="step">
+            <span class="step-number">3</span>
+            <div class="step-body">
+                <p>著者タイプ（人物/組織/法人）を選択</p>
+            </div>
+        </div>
+        <div class="step">
+            <span class="step-number">4</span>
+            <div class="step-body">
+                <p>表示名・肩書・プロフィール写真・経歴・SNS URLを入力</p>
+            </div>
+        </div>
+        <div class="step">
+            <span class="step-number">5</span>
+            <div class="step-body">
+                <p>「プロフィールを更新」をクリック</p>
+            </div>
+        </div>
+
+        <div class="callout callout-warning">
+            <p>プロフィール写真はメディアライブラリから選択するか、URLを直接入力できます。推奨サイズは正方形（例: 200x200px）です。</p>
+        </div>
+
+        <nav class="page-nav">
+            <a href="index.html" class="prev">&laquo; 概要</a>
+            <a href="author-box.html" class="next">著者ボックス表示 &raquo;</a>
+        </nav>
+
+        <footer class="manual-footer">
+            <p>作者: <a href="https://www.tsuyoshikashiwazaki.jp/profile/" target="_blank" rel="noopener">柏崎剛（Tsuyoshi Kashiwazaki）</a></p>
+            <p>プラグイン: Kashiwazaki SEO Author Schema Display v1.0.6</p>
+        </footer>
+    </main>
+    <div class="lightbox"></div>
+    <script src="js/manual.js?v=1"></script>
+</body>
+</html>

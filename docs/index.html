@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kashiwazaki SEO Author Schema Display マニュアル - Author Schema Display マニュアル</title>
+    <link rel="stylesheet" href="css/style.css?v=1">
+</head>
+<body>
+    <button class="hamburger-btn" aria-label="メニューを開く">&#9776;</button>
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2 style="color:#fff;">Author Schema Display</h2>
+            <span class="version">v1.0.6</span>
+            <img src="images/main-visual.png" alt="" style="width:100%;border-radius:4px;margin-top:8px;">
+        </div>
+        <ul>
+            <li><a href="index.html">概要</a></li>
+            <li><a href="setup.html">インストール・初期設定</a></li>
+            <li><a href="author-box.html">著者ボックス表示</a></li>
+            <li><a href="schema.html">JSON-LDスキーマ出力</a></li>
+            <li><a href="troubleshooting.html">トラブルシューティング</a></li>
+        </ul>
+    </nav>
+    <main class="content">
+        <h1>Kashiwazaki SEO Author Schema Display マニュアル</h1>
+        <img src="images/main-visual.png" alt="Author Schema Display メインビジュアル" style="width:100%; border-radius:8px; margin-bottom:24px;">
+
+        <p class="lead">WordPressの記事に著者情報カード（プロフィール写真・名前・肩書・経歴・SNSリンク）を自動挿入し、JSON-LD構造化データでE-E-A-Tシグナルを強化するSEOプラグインです。</p>
+
+        <p>Kashiwazaki SEO Author Schema Displayは、Googleが重視するE-E-A-T（経験・専門性・権威性・信頼性）の評価において重要な「誰がこのコンテンツを書いたのか」を、ユーザーと検索エンジンの両方に正確に伝えるために開発されました。記事に著者プロフィールカードを視覚的に表示するだけでなく、JSON-LD形式の構造化データとしてArticle / Person / Organization のスキーマをページのhead内に出力します。</p>
+
+        <div class="feature-cards">
+            <div class="feature-card">
+                <h3>著者カード表示</h3>
+                <p>記事の指定位置に著者プロフィールカードを自動挿入。27種類の表示位置から選択可能</p>
+            </div>
+            <div class="feature-card">
+                <h3>JSON-LDスキーマ</h3>
+                <p>Article/Person/Organization の構造化データを自動出力。4つのスキーマモードに対応</p>
+            </div>
+            <div class="feature-card">
+                <h3>E-E-A-T強化</h3>
+                <p>Google検索でのE-E-A-Tシグナルを強化。著者の専門性・信頼性を検索エンジンに伝達</p>
+            </div>
+        </div>
+
+        <h2>SEO / GEO における強み</h2>
+
+        <p>著者情報の明示は、SEO・GEOの両面でコンテンツの信頼性評価に寄与します。本プラグインは視覚表示と構造化データの両方でこれを実現します。</p>
+
+        <h3>JSON-LDによる構造化データ出力</h3>
+        <p>本プラグインはページのhead内にJSON-LD形式の構造化データを出力します。Article / Person / Organization / Role の各スキーマタイプに対応しており、検索エンジンが著者情報を機械的に理解できます。これにより、Google検索結果でのリッチリザルト表示（著者名の表示等）の可能性が高まります。4つのスキーマモード（スキーマなし / シンプル著者 / 詳細著者 / 分離参照）から、サイトの構成に合った出力方式を選択できます。</p>
+
+        <h3>E-E-A-Tの支援</h3>
+        <p>Googleの品質評価ガイドラインにおいて、E-E-A-T（経験・専門性・権威性・信頼性）は重要な評価軸です。本プラグインは2つのレイヤーでE-E-A-Tを支援します。(1) 著者ボックスによる視覚的な著者情報の表示（ユーザー・品質評価者向け）と、(2) JSON-LDスキーマによる著者のRole・所属組織・プロフィールリンクの機械可読な出力（検索エンジン向け）です。特に「詳細著者」モードでは著者の役割（執筆者・監修者等）をスキーマに明示でき、YMYLジャンルでの信頼性評価に有効です。</p>
+
+        <h3>GEO（生成エンジン最適化）への対応</h3>
+        <p>AI検索（ChatGPT、Gemini、Perplexity等）がWebページを参照する際、構造化データに含まれる著者情報はコンテンツの信頼性判断の材料となります。JSON-LDで出力されたPerson / Organizationスキーマは、AIが「この記事は誰が書いたのか」を把握する際に参照できるデータです。また、記事内に視覚的に著者のプロフィール（肩書・経歴・SNSリンク）が明記されていることで、AIがそのコンテンツを専門家による情報として引用しやすくなる傾向があります。</p>
+
+        <h3>軽量な実装</h3>
+        <p>プラグインのフロントエンド出力はCSSのみで、外部JavaScriptの読み込みはありません。著者ボックスのHTMLとJSON-LDスクリプトタグをページに追加するだけのシンプルな実装のため、Core Web Vitals（LCP・CLS・INP）への悪影響がありません。</p>
+
+        <h2>全体ワークフロー</h2>
+        <figure class="infographic">
+            <img src="images/infographics/overview-flow.png" alt="プラグインの全体ワークフロー">
+            <figcaption>プラグインの全体ワークフロー</figcaption>
+        </figure>
+
+        <h2>目次</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:35%;">ページ</th>
+                    <th>内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="index.html">概要</a></td>
+                    <td>プラグインの特徴・SEO/GEOの強み・動作要件を紹介</td>
+                </tr>
+                <tr>
+                    <td><a href="setup.html">インストール・初期設定</a></td>
+                    <td>インストール手順・著者プロフィールの入力・表示設定</td>
+                </tr>
+                <tr>
+                    <td><a href="author-box.html">著者ボックス表示</a></td>
+                    <td>27種類の表示位置・著者タイプ・ショートコード</td>
+                </tr>
+                <tr>
+                    <td><a href="schema.html">JSON-LDスキーマ出力</a></td>
+                    <td>4つのスキーマモード・Articleタイプの選択</td>
+                </tr>
+                <tr>
+                    <td><a href="troubleshooting.html">トラブルシューティング</a></td>
+                    <td>よくある問題と解決方法・動作要件・技術仕様</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>動作要件</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>項目</th>
+                    <th>要件</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>WordPress</td>
+                    <td>5.8+</td>
+                </tr>
+                <tr>
+                    <td>PHP</td>
+                    <td>7.4+</td>
+                </tr>
+                <tr>
+                    <td>外部依存</td>
+                    <td>なし</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <nav class="page-nav">
+            <span></span>
+            <a href="setup.html" class="next">インストール・初期設定 &raquo;</a>
+        </nav>
+
+        <footer class="manual-footer">
+            <p>作者: <a href="https://www.tsuyoshikashiwazaki.jp/profile/" target="_blank" rel="noopener">柏崎剛（Tsuyoshi Kashiwazaki）</a></p>
+            <p>プラグイン: Kashiwazaki SEO Author Schema Display v1.0.6</p>
+        </footer>
+    </main>
+    <div class="lightbox"></div>
+    <script src="js/manual.js?v=1"></script>
+</body>
+</html>

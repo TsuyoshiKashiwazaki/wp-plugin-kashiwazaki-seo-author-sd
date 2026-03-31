@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>著者ボックス表示 - Author Schema Display マニュアル</title>
+    <link rel="stylesheet" href="css/style.css?v=1">
+</head>
+<body>
+    <button class="hamburger-btn" aria-label="メニューを開く">&#9776;</button>
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2 style="color:#fff;">Author Schema Display</h2>
+            <span class="version">v1.0.6</span>
+            <img src="images/main-visual.png" alt="" style="width:100%;border-radius:4px;margin-top:8px;">
+        </div>
+        <ul>
+            <li><a href="index.html">概要</a></li>
+            <li><a href="setup.html">インストール・初期設定</a></li>
+            <li><a href="author-box.html">著者ボックス表示</a></li>
+            <li><a href="schema.html">JSON-LDスキーマ出力</a></li>
+            <li><a href="troubleshooting.html">トラブルシューティング</a></li>
+        </ul>
+    </nav>
+    <main class="content">
+        <h1>著者ボックス表示</h1>
+
+        <p class="lead">記事ページに著者プロフィールカードを自動表示する機能について解説します。</p>
+
+        <h2>著者ボックスの構成要素</h2>
+
+        <div class="feature-cards">
+            <div class="feature-card">
+                <h3>プロフィール情報</h3>
+                <p>円形プロフィール写真（80×80px）、著者名（リンク付き）、肩書、所属組織</p>
+            </div>
+            <div class="feature-card">
+                <h3>経歴・役割</h3>
+                <p>経歴テキスト、役割バッジ（執筆者 / 監修者 / 管理者）</p>
+            </div>
+            <div class="feature-card">
+                <h3>SNS・連絡先</h3>
+                <p>メールアイコン、SNSアイコン（40以上のサービスに自動対応）</p>
+            </div>
+        </div>
+
+        <h2>フロントエンド表示例</h2>
+        <div class="screenshot">
+            <img src="images/screenshots/04-frontend-author-box.png" alt="著者ボックスのフロントエンド表示例" class="lightbox-trigger">
+        </div>
+
+        <h2>著者タイプ</h2>
+        <p>プラグインでは3種類の著者タイプを選択できます。タイプに応じて表示内容とスキーマ出力が変わります。</p>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:30%;">著者タイプ</th>
+                    <th>説明</th>
+                    <th style="width:25%;">固有の表示項目</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>人物（Person）</td>
+                    <td>個人の著者として情報を表示。最も一般的な設定です。</td>
+                    <td>肩書、所属組織</td>
+                </tr>
+                <tr>
+                    <td>組織（Organization）</td>
+                    <td>チームやグループとして著者情報を表示します。</td>
+                    <td>組織名</td>
+                </tr>
+                <tr>
+                    <td>法人（Corporation）</td>
+                    <td>企業・法人として著者情報を表示します。</td>
+                    <td>法人名</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>表示位置の設定</h2>
+        <p>著者ボックスの挿入位置は <strong>27種類</strong> から選択できます。管理画面の「表示設定」タブで変更してください。</p>
+
+        <h3>基本（4種）</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:35%;">表示位置</th>
+                    <th>説明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>記事上（top）</td><td>記事本文の先頭に表示</td></tr>
+                <tr><td>記事下（bottom）</td><td>記事本文の末尾に表示</td></tr>
+                <tr><td>記事上下両方（both）</td><td>先頭と末尾の両方に表示</td></tr>
+                <tr><td>最後のHTMLタグの後</td><td>コンテンツ内の最後のHTMLタグ直後に表示</td></tr>
+            </tbody>
+        </table>
+
+        <h3>見出しの前後（12種）</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:35%;">位置</th>
+                    <th>対象見出し</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>最初の見出しの上</td><td>H1 / H2 / H3 / H4 / H5 / H6（各1種、計6種）</td></tr>
+                <tr><td>最初の見出しの下</td><td>H1 / H2 / H3 / H4 / H5 / H6（各1種、計6種）</td></tr>
+            </tbody>
+        </table>
+
+        <h3>段落ベース（5種）</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:35%;">表示位置</th>
+                    <th>説明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>最初の段落の後</td><td>1番目の &lt;p&gt; タグ直後</td></tr>
+                <tr><td>2番目の段落の後</td><td>2番目の &lt;p&gt; タグ直後</td></tr>
+                <tr><td>3番目の段落の後</td><td>3番目の &lt;p&gt; タグ直後</td></tr>
+                <tr><td>最後の段落の直前</td><td>最後の &lt;p&gt; タグ直前</td></tr>
+                <tr><td>最後の段落の後</td><td>最後の &lt;p&gt; タグ直後</td></tr>
+            </tbody>
+        </table>
+
+        <h3>特殊要素（6種）</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:35%;">表示位置</th>
+                    <th>説明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>最初の画像の後</td><td>最初の &lt;img&gt; タグ直後</td></tr>
+                <tr><td>最初の引用の後</td><td>最初の &lt;blockquote&gt; タグ直後</td></tr>
+                <tr><td>最初のリストの後</td><td>最初の &lt;ul&gt; / &lt;ol&gt; タグ直後</td></tr>
+                <tr><td>最初のテーブルの後</td><td>最初の &lt;table&gt; タグ直後</td></tr>
+                <tr><td>moreタグの直後</td><td>&lt;!--more--&gt; タグ直後</td></tr>
+                <tr><td>ホームページ</td><td>トップページにも著者ボックスを表示</td></tr>
+            </tbody>
+        </table>
+
+        <div class="callout callout-tip">
+            <p>最もよく使われる設定は <strong>「記事下（bottom）」</strong> です。記事を読み終えた読者に著者情報を提示でき、SEO効果も高い位置です。</p>
+        </div>
+
+        <h2>ショートコードによる手動挿入</h2>
+        <p>自動挿入に加えて、<code>[ksas_author]</code> ショートコードで任意の場所に著者ボックスを挿入できます。</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:40%;">ショートコード</th>
+                    <th>動作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>[ksas_author]</code></td>
+                    <td>現在の投稿の著者を表示</td>
+                </tr>
+                <tr>
+                    <td><code>[ksas_author user_id="1"]</code></td>
+                    <td>指定ユーザーID の著者を表示</td>
+                </tr>
+                <tr>
+                    <td><code>[ksas_author author="username"]</code></td>
+                    <td>指定ユーザー名の著者を表示</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="callout callout-note">
+            <p>自動表示とショートコードは併用できます。ショートコードで挿入した場合も、設定で選択した自動挿入位置に著者ボックスが表示されます。</p>
+        </div>
+
+        <h2>著者ボックスの表示フロー</h2>
+        <figure class="infographic">
+            <img src="images/infographics/author-box-flow.png" alt="著者ボックスの表示フロー">
+            <figcaption>著者ボックスの表示フロー</figcaption>
+        </figure>
+
+        <nav class="page-nav">
+            <a href="setup.html" class="prev">&laquo; インストール・初期設定</a>
+            <a href="schema.html" class="next">JSON-LDスキーマ出力 &raquo;</a>
+        </nav>
+
+        <footer class="manual-footer">
+            <p>作者: <a href="https://www.tsuyoshikashiwazaki.jp/profile/" target="_blank" rel="noopener">柏崎剛（Tsuyoshi Kashiwazaki）</a></p>
+            <p>プラグイン: Kashiwazaki SEO Author Schema Display v1.0.6</p>
+        </footer>
+    </main>
+    <div class="lightbox"></div>
+    <script src="js/manual.js?v=1"></script>
+</body>
+</html>
