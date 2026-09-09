@@ -4,7 +4,7 @@ Tags: seo, schema, author, json-ld, structured data
 Requires at least: 5.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.0.6
+Stable tag: 1.0.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -87,6 +87,19 @@ The author and developer of this plugin, Tsuyoshi Kashiwazaki, is not responsibl
 本プラグインの作者および開発者（柏崎剛）は、本プラグインの使用に起因するいかなる損害や損失についても、一切の責任を負いません。本プラグインの利用は、すべて利用者ご自身の責任において行ってください。本プラグインは、明示または黙示を問わず、いかなる保証も伴わずに「現状有姿」で提供されます。
 
 == Changelog ==
+
+= 1.0.7 =
+* 修正: WordPress 6.8 未満でフロントエンドが致命的エラーになる問題（プラグイン情報スキーマ出力時）
+* 修正: WordPress 5.8 + PHP 7.x 環境で致命的エラーになる問題（SNS URL 正規化）
+* 修正: 画像・埋め込みのみの投稿で本文が著者ボックスに置き換わって消える問題
+* 修正: 著者情報に $ と数字を含むと著者ボックス挿入時に文字化けする問題
+* 修正: プロフィール URL がページ URL と同じ場合に JSON-LD の Person ノードが出力されない問題
+* 修正: 投稿一覧ホームで JSON-LD の Article の @id / url / headline が空になる問題
+* 修正: アーカイブページのショートコードで無関係な投稿の著者が表示される問題
+* 修正: 関連記事など二次ループの本文にも著者ボックスが挿入される問題
+* 修正: JSON-LD の script 要素内に閉じタグ等が混入し得る問題（キャプションのタグ除去、エスケープ強化）
+* 修正: 2 つ目以降のメディア選択ボタンの結果が最初の入力欄に書き込まれる問題
+* 修正: メールアドレス難読化サービスが mailto リンクを書き換えると Microdata の email が壊れる問題
 
 = 1.0.6 =
 * 新機能: the_content()を使わない投稿タイプの自動検出機能

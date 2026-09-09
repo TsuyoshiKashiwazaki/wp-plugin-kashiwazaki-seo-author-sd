@@ -204,46 +204,47 @@ function ksas_profile_fields( $user ) {
 				toggleProfileFields($(this).val());
 			});
 			
-			// メディアアップローダー機能
+			// メディアアップローダー機能（フレームは 1 つを使い回し、対象フィールドはクリックのたびに更新する）
 			var mediaUploader;
+			var $currentButton = null;
+			var $currentField = null;
 			
 			$('.ksas-media-button').on('click', function(e) {
 				e.preventDefault();
-				var targetInput = $(this).data('target');
-				var $targetField = $('#' + targetInput);
-				var $previewDiv = $(this).siblings('.ksas-media-preview');
+				$currentButton = $(this);
+				$currentField = $('#' + $currentButton.data('target'));
 				
 				// メディアアップローダーがまだ作成されていない場合は作成
-				if (mediaUploader) {
-					mediaUploader.open();
-					return;
-				}
-				
-				// メディアアップローダーを作成
-				mediaUploader = wp.media({
-					title: '画像を選択',
-					button: {
-						text: '選択'
-					},
-					multiple: false,
-					library: {
-						type: 'image'
-					}
-				});
-				
-				// 画像が選択されたときの処理
-				mediaUploader.on('select', function() {
-					var attachment = mediaUploader.state().get('selection').first().toJSON();
-					$targetField.val(attachment.url);
+				if (!mediaUploader) {
+					mediaUploader = wp.media({
+						title: '画像を選択',
+						button: {
+							text: '選択'
+						},
+						multiple: false,
+						library: {
+							type: 'image'
+						}
+					});
 					
-					// プレビュー画像を更新
-					if ($previewDiv.length) {
-						$previewDiv.find('img').attr('src', attachment.url);
-					} else {
-						// プレビューが存在しない場合は作成
-						$('<div class="ksas-media-preview"><img src="' + attachment.url + '" alt="プレビュー" /></div>').insertAfter($targetField.parent().find('.ksas-media-button'));
-					}
-				});
+					// 画像が選択されたときの処理（最後にクリックしたボタンのフィールドへ書き込む）
+					mediaUploader.on('select', function() {
+						var attachment = mediaUploader.state().get('selection').first().toJSON();
+						if (!$currentField || !$currentField.length) {
+							return;
+						}
+						$currentField.val(attachment.url);
+						
+						// プレビュー画像を更新
+						var $previewDiv = $currentButton.siblings('.ksas-media-preview');
+						if ($previewDiv.length) {
+							$previewDiv.find('img').attr('src', attachment.url);
+						} else {
+							// プレビューが存在しない場合は作成
+							$('<div class="ksas-media-preview"><img src="' + attachment.url + '" alt="プレビュー" /></div>').insertAfter($currentButton);
+						}
+					});
+				}
 				
 				// アップローダーを開く
 				mediaUploader.open();

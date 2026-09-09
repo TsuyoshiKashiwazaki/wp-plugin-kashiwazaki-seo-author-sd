@@ -148,7 +148,7 @@ function ksas_sns_icon_class( string $url ): string {
 	}
 
 	foreach ( $icon_map as $domain_start => $icon_class ) {
-		if ( str_ends_with( $domain_start, '.' ) ) {
+		if ( substr( $domain_start, -1 ) === '.' ) {
             $check_domain = rtrim($domain_start, '.');
 			if ( $host === $check_domain || strpos( $host, $domain_start ) === 0 ) {
 				return $icon_class;

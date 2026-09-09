@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.7] - 2026-09-09
+
+### Fixed
+- WordPress 6.8 未満で `get_plugin_data()` が未定義のままフロントエンドで呼び出され、致命的エラーになる問題（プラグイン情報スキーマ出力時）
+- WordPress 5.8 + PHP 7.x 環境で `str_ends_with()` が未定義で致命的エラーになる問題（SNS URL 正規化）
+- 画像・埋め込みのみで本文テキストがない投稿で、本文が著者ボックスに置き換わって消える問題
+- 著者情報に `$` と数字を含む文字列があると、著者ボックス挿入時に文字化けする問題（置換文字列の後方参照）
+- 著者のプロフィール URL が表示中のページ URL と同じ場合に、JSON-LD の Person ノードが出力されない問題
+- 投稿一覧ホーム（ブログインデックス）で JSON-LD の Article の @id / url / headline が空になる問題
+- カテゴリー・タグ等のアーカイブページでショートコードを使うと、無関係な投稿の著者が表示される問題
+- 記事ページ内の関連記事など二次ループの本文にも著者ボックスが挿入される問題
+- JSON-LD の `script` 要素内に閉じタグ等が混入し得る問題（サムネイルキャプションのタグ除去、`<` `&` のエスケープ強化）
+- 著者情報編集画面で、2 つ目以降のメディア選択ボタンの結果が最初の入力欄に書き込まれる問題
+- メールアドレス難読化サービスが `mailto:` リンクを書き換えた場合に Microdata の email が壊れる問題（`meta` 要素で出力するよう変更）
+
 ## [1.0.6] - 2025-11-11
 
 ### Added

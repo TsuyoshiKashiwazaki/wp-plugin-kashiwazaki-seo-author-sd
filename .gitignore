@@ -26,9 +26,6 @@ node_modules/
 # Composer
 /vendor/
 
-# Development
-/zip/
-
 # Build artifacts
 /build/
 /dist/
@@ -36,3 +33,11 @@ node_modules/
 # Environment files
 .env
 .env.local
+
+# AI / 開発ツール設定 (公開リポジトリに入れない)
+.claude/
+CLAUDE.md
+.codex
+.cursor/
+.aider*
+.playwright-mcp/

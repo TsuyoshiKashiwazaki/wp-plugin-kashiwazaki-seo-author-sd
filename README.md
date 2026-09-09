@@ -3,7 +3,7 @@
 [![WordPress](https://img.shields.io/badge/WordPress-5.0%2B-blue.svg)](https://wordpress.org/)
 [![PHP](https://img.shields.io/badge/PHP-7.4%2B-purple.svg)](https://php.net/)
 [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-green.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
-[![Version](https://img.shields.io/badge/Version-1.0.6-orange.svg)](https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-author-sd/releases)
+[![Version](https://img.shields.io/badge/Version-1.0.7-orange.svg)](https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-author-sd/releases)
 
 WordPressプラグイン「**Kashiwazaki SEO Author Schema Display**」は、著者カード（顔写真・肩書・SNS等）を記事上下に自動表示し、Article・NewsArticle・BlogPosting・WebPage＋Role・Person の JSON‑LD を生成、**E‑E‑A‑T**と**リッチリザルト**を一括強化するオールインワン SEO プラグインです。
 
@@ -105,6 +105,19 @@ Facebook, X (Twitter), Instagram, LinkedIn, YouTube, Pinterest, GitHub, GitLab, 
 - **JavaScript**: jQuery（WordPress標準）
 
 ## 更新履歴
+
+### [1.0.7] - 2026-09-09
+- **FIX**: WordPress 6.8 未満でフロントエンドが致命的エラーになる問題（プラグイン情報スキーマ出力時）
+- **FIX**: WordPress 5.8 + PHP 7.x 環境で致命的エラーになる問題（SNS URL 正規化）
+- **FIX**: 画像・埋め込みのみの投稿で本文が著者ボックスに置き換わって消える問題
+- **FIX**: 著者情報に `$` と数字を含むと著者ボックス挿入時に文字化けする問題
+- **FIX**: プロフィール URL がページ URL と同じ場合に JSON-LD の Person ノードが出力されない問題
+- **FIX**: 投稿一覧ホームで JSON-LD の Article の @id / url / headline が空になる問題
+- **FIX**: アーカイブページのショートコードで無関係な投稿の著者が表示される問題
+- **FIX**: 関連記事など二次ループの本文にも著者ボックスが挿入される問題
+- **FIX**: JSON-LD の script 要素内に閉じタグ等が混入し得る問題（キャプションのタグ除去、エスケープ強化）
+- **FIX**: 2 つ目以降のメディア選択ボタンの結果が最初の入力欄に書き込まれる問題
+- **FIX**: メールアドレス難読化サービスが mailto リンクを書き換えると Microdata の email が壊れる問題
 
 ### [1.0.6] - 2025-11-11
 - **NEW**: the_content()を使わない投稿タイプの自動検出機能

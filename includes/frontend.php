@@ -59,6 +59,7 @@ function ksas_render_author_html( int $uid ): string {
 	?>
 	<section class="ksas-author-status" itemscope itemtype="<?php echo esc_attr( $schema_type_url ); ?>" aria-label="<?php echo esc_attr( $aria_label_section ); ?>">
 		<?php if ($profile_link): ?><meta itemprop="<?php echo esc_attr($url_prop); ?>" content="<?php echo esc_url($profile_link); ?>" /><?php endif; ?>
+		<?php if ( ! empty( $meta['email'] ) && is_email( $meta['email'] ) ) : ?><meta itemprop="<?php echo esc_attr($email_prop); ?>" content="<?php echo esc_attr( $meta['email'] ); ?>" /><?php endif; ?>
 		<div class="ksas-header">
 			<?php echo wp_kses_post( $avatar_html ); ?>
 			<div class="ksas-central">
@@ -87,7 +88,7 @@ function ksas_render_author_html( int $uid ): string {
 			<?php echo wp_kses_post( $role_badge ); ?>
 			<div class="ksas-links" role="navigation" aria-label="<?php echo esc_attr( $aria_label_links ); ?>">
 				<?php if ( ! empty( $meta['email'] ) && is_email( $meta['email'] ) ) : ?>
-					<a href="mailto:<?php echo antispambot( esc_attr( $meta['email'] ) ); ?>" class="ksas-icon" title="Email" aria-label="Email" itemprop="<?php echo esc_attr($email_prop); ?>">
+					<a href="mailto:<?php echo antispambot( esc_attr( $meta['email'] ) ); ?>" class="ksas-icon" title="Email" aria-label="Email">
 						<span class="dashicons dashicons-email" aria-hidden="true"></span>
 					</a>
 				<?php endif; ?>
@@ -112,9 +113,17 @@ function ksas_render_author_html( int $uid ): string {
 }
 
 function ksas_get_default_author_id(): int {
-	$post_id = get_queried_object_id();
-	if ( $post_id ) {
-		$author_id = (int) get_post_field( 'post_author', $post_id );
+	// get_queried_object_id() はアーカイブでは term_id / user_id を返すため、投稿として扱うのは singular のときだけ
+	if ( is_singular() ) {
+		$post_id = get_queried_object_id();
+		if ( $post_id ) {
+			$author_id = (int) get_post_field( 'post_author', $post_id );
+			if ( $author_id ) {
+				return $author_id;
+			}
+		}
+	} elseif ( is_author() ) {
+		$author_id = (int) get_queried_object_id();
 		if ( $author_id ) {
 			return $author_id;
 		}
@@ -201,9 +210,50 @@ function ksas_schema_author_block( string $mode ): string {
 	$plink    = ksas_normalize_url( $meta['profile'] );
 	$same_as  = array_filter( array_map( 'ksas_normalize_url', $meta['sns'] ) );
 
+	$atype_map = [ 'article'=>'Article','newsarticle'=>'NewsArticle','blogposting'=>'BlogPosting','webpage'=>'WebPage' ];
+	$atype_opt   = strtolower( get_option( 'ksas_article_type', 'article' ) );
+	$articleType = $atype_map[ $atype_opt ] ?? 'Article';
+	
+	$page_url = '';
+	$post_title = '';
+	
+	if ( $post_id ) {
+		$page_url = get_permalink( $post_id );
+		$post_title = get_the_title( $post_id );
+	} elseif ( is_front_page() || is_home() ) {
+		// 投稿一覧をホームにしている場合 get_queried_object_id() は 0 になるため、サイトの URL / 名前で埋める
+		$page_url = home_url( '/' );
+		$post_title = get_bloginfo( 'name' );
+	} elseif ( is_category() ) {
+		$category = get_queried_object();
+		$page_url = get_category_link( $category->term_id );
+		$post_title = $category->name;
+	} elseif ( is_tag() ) {
+		$tag = get_queried_object();
+		$page_url = get_tag_link( $tag->term_id );
+		$post_title = $tag->name;
+	}
+
+	if ( $mode === 'person_ref' ) {
+		$anchor = get_option( 'ksas_article_anchor', '' );
+        if ( ! empty( $anchor ) && strpos( $anchor, '#' ) !== 0 ) {
+            $anchor = '#' . $anchor;
+        }
+        if ( $anchor === '#' ) {
+            $anchor = '';
+        }
+		$article_id = $page_url . $anchor;
+	} else {
+		$article_id = $page_url;
+	}
+	
 	$author_node_common = [ '@type' => $schema_type, 'name' => $name ];
 	$author_profile_url = $plink ?: ( ( $author_type === 'person' ) ? get_author_posts_url( $author_id ) : '' );
 	$author_node_id = $author_profile_url ? $author_profile_url : home_url('/#' . $author_type . '-' . $author_id);
+	// 著者の @id が現在ページ (Article) の @id と同じだと @graph の重複除去で著者ノードが消えるため、フラグメントで区別する
+	if ( $author_node_id === $article_id || $author_node_id === $page_url ) {
+		$author_node_id .= '#' . $author_type;
+	}
 	$author_node_common['@id'] = $author_node_id;
 
 	if ( $author_profile_url ) { $author_node_common['url'] = $author_profile_url; }
@@ -248,39 +298,6 @@ function ksas_schema_author_block( string $mode ): string {
 		$author_prop_value = [ '@type' => $schema_type, '@id' => $author_node_id ];
 	}
 
-	$atype_map = [ 'article'=>'Article','newsarticle'=>'NewsArticle','blogposting'=>'BlogPosting','webpage'=>'WebPage' ];
-	$atype_opt   = strtolower( get_option( 'ksas_article_type', 'article' ) );
-	$articleType = $atype_map[ $atype_opt ] ?? 'Article';
-	
-	$page_url = '';
-	$post_title = '';
-	
-	if ( $post_id ) {
-		$page_url = get_permalink( $post_id );
-		$post_title = get_the_title( $post_id );
-	} elseif ( is_category() ) {
-		$category = get_queried_object();
-		$page_url = get_category_link( $category->term_id );
-		$post_title = $category->name;
-	} elseif ( is_tag() ) {
-		$tag = get_queried_object();
-		$page_url = get_tag_link( $tag->term_id );
-		$post_title = $tag->name;
-	}
-
-	if ( $mode === 'person_ref' ) {
-		$anchor = get_option( 'ksas_article_anchor', '' );
-        if ( ! empty( $anchor ) && strpos( $anchor, '#' ) !== 0 ) {
-            $anchor = '#' . $anchor;
-        }
-        if ( $anchor === '#' ) {
-            $anchor = '';
-        }
-		$article_id = $page_url . $anchor;
-	} else {
-		$article_id = $page_url;
-	}
-	
 	$article = [
 		'@type'            => $articleType,
 		'@id'              => $article_id,
@@ -324,7 +341,7 @@ function ksas_schema_author_block( string $mode ): string {
 			'url'     => ksas_normalize_url($img[0]),
 			'width'   => (int)$img[1],
 			'height'  => (int)$img[2],
-			'caption' => get_the_post_thumbnail_caption( $post_id ) ?: wp_strip_all_tags( $post_title ),
+			'caption' => wp_strip_all_tags( get_the_post_thumbnail_caption( $post_id ) ?: $post_title ),
 		];
 	}
 
@@ -365,7 +382,7 @@ function ksas_schema_author_block( string $mode ): string {
 
 	if ( empty($output_data) ) { return ''; }
 
-	$json_ld_output = '<script type="application/ld+json" class="ksas-schema-graph">' . wp_json_encode( $output_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT ) . '</script>';
+	$json_ld_output = '<script type="application/ld+json" class="ksas-schema-graph">' . wp_json_encode( $output_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_HEX_TAG | JSON_HEX_AMP ) . '</script>';
 
     if ( defined('WP_DEBUG') && WP_DEBUG ) {
         $debug_comment = sprintf("\n<!-- KSAS Schema Mode: %s | Author Type: %s | Schema Type: %s | Graph Nodes: %d -->\n", esc_html($mode), esc_html($author_type), esc_html($schema_type), count($unique_graph) );
@@ -392,6 +409,10 @@ if ( ! function_exists( 'ksas_output_plugin_schema' ) ) {
 		
 		if ( ! $should_output ) { return; }
 
+		// get_plugin_data() は WP 6.8 未満ではフロントで読み込まれていない (wp-admin/includes/plugin.php)
+		if ( ! function_exists( 'get_plugin_data' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
 		$plugin_data = get_plugin_data( KSAS_ASD_PATH . 'author-status-display.php' );
 		$schema = [
 			'@context'=>'https://schema.org',
@@ -411,7 +432,7 @@ if ( ! function_exists( 'ksas_output_plugin_schema' ) ) {
 			'author'=>[ '@type'=>'Person', 'name'=>$plugin_data['AuthorName'] ?? 'Tsuyoshi Kashiwazaki', 'url'=>$plugin_data['AuthorURI'] ?? 'https://www.tsuyoshikashiwazaki.jp/' ],
 		];
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_json_encode output is safe for JSON-LD
-		echo '<script type="application/ld+json" class="ksas-plugin-schema">' . wp_json_encode( $schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT ) . '</script>';
+		echo '<script type="application/ld+json" class="ksas-plugin-schema">' . wp_json_encode( $schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_HEX_TAG | JSON_HEX_AMP ) . '</script>';
 	}
 }
 
@@ -535,6 +556,11 @@ add_filter( 'the_content', function ( $content ) {
 		return $content;
 	}
 
+	// 記事ページ内の二次ループ（関連記事など）の投稿には挿入しない
+	if ( is_singular() && (int) $post_id !== (int) get_queried_object_id() ) {
+		return $content;
+	}
+
 	// 開発者が独自の条件を追加できるフィルターフック
 	if ( ! apply_filters( 'ksas_should_add_author_box_to_content', true, $content, $post_id ) ) {
 		return $content;
@@ -550,10 +576,14 @@ add_filter( 'the_content', function ( $content ) {
 	
 	$pos = get_option( 'ksas_position', 'top' );
 	
-	// 空のコンテンツでも著者ボックスを表示
-	if ( empty( trim( wp_strip_all_tags( $content ) ) ) ) {
+	// 本文が完全に空でも著者ボックスを表示（画像・埋め込みのみの本文は空扱いにしない）
+	if ( '' === trim( $content ) ) {
 		return $html;
 	}
+
+	// preg_replace の置換文字列に $html を直結すると $n や \n が後方参照として解釈されるため、コールバックで挿入する
+	$insert_before = function ( $m ) use ( $html ) { return $html . $m[0]; };
+	$insert_after  = function ( $m ) use ( $html ) { return $m[0] . $html; };
 	
 	if ( $pos === 'bottom' ) {
 		return $content . $html;
@@ -563,7 +593,7 @@ add_filter( 'the_content', function ( $content ) {
 		// 見出しタグの直前に挿入
 		$pattern = '/<(' . $pos . ')[^>]*>/i';
 		if ( preg_match( $pattern, $content ) ) {
-			return preg_replace( $pattern, $html . '$0', $content, 1 );
+			return preg_replace_callback( $pattern, $insert_before, $content, 1 );
 		} else {
 			return $html . $content;
 		}
@@ -572,14 +602,14 @@ add_filter( 'the_content', function ( $content ) {
 		$tag = str_replace( '_after', '', $pos );
 		$pattern = '/<' . $tag . '[^>]*>.*?<\/' . $tag . '>/is';
 		if ( preg_match( $pattern, $content ) ) {
-			return preg_replace( $pattern, '$0' . $html, $content, 1 );
+			return preg_replace_callback( $pattern, $insert_after, $content, 1 );
 		} else {
 			return $html . $content;
 		}
 	} elseif ( $pos === 'first_p_after' ) {
 		// 最初の段落の直後
 		if ( preg_match( '/<p[^>]*>.*?<\/p>/is', $content ) ) {
-			return preg_replace( '/<p[^>]*>.*?<\/p>/is', '$0' . $html, $content, 1 );
+			return preg_replace_callback( '/<p[^>]*>.*?<\/p>/is', $insert_after, $content, 1 );
 		} else {
 			return $html . $content;
 		}
@@ -623,35 +653,35 @@ add_filter( 'the_content', function ( $content ) {
 	} elseif ( $pos === 'first_image_after' ) {
 		// 最初の画像の直後
 		if ( preg_match( '/<img[^>]*>/i', $content ) ) {
-			return preg_replace( '/<img[^>]*>/i', '$0' . $html, $content, 1 );
+			return preg_replace_callback( '/<img[^>]*>/i', $insert_after, $content, 1 );
 		} else {
 			return $html . $content;
 		}
 	} elseif ( $pos === 'first_blockquote_after' ) {
 		// 最初の引用の直後
 		if ( preg_match( '/<blockquote[^>]*>.*?<\/blockquote>/is', $content ) ) {
-			return preg_replace( '/<blockquote[^>]*>.*?<\/blockquote>/is', '$0' . $html, $content, 1 );
+			return preg_replace_callback( '/<blockquote[^>]*>.*?<\/blockquote>/is', $insert_after, $content, 1 );
 		} else {
 			return $html . $content;
 		}
 	} elseif ( $pos === 'first_list_after' ) {
 		// 最初のリストの直後
 		if ( preg_match( '/<(ul|ol)[^>]*>.*?<\/\1>/is', $content ) ) {
-			return preg_replace( '/<(ul|ol)[^>]*>.*?<\/\1>/is', '$0' . $html, $content, 1 );
+			return preg_replace_callback( '/<(ul|ol)[^>]*>.*?<\/\1>/is', $insert_after, $content, 1 );
 		} else {
 			return $html . $content;
 		}
 	} elseif ( $pos === 'first_table_after' ) {
 		// 最初のテーブルの直後
 		if ( preg_match( '/<table[^>]*>.*?<\/table>/is', $content ) ) {
-			return preg_replace( '/<table[^>]*>.*?<\/table>/is', '$0' . $html, $content, 1 );
+			return preg_replace_callback( '/<table[^>]*>.*?<\/table>/is', $insert_after, $content, 1 );
 		} else {
 			return $html . $content;
 		}
 	} elseif ( $pos === 'after_more_tag' ) {
 		// <!--more-->タグの直後
 		if ( preg_match( '/<!--more(.*?)-->/i', $content ) ) {
-			return preg_replace( '/<!--more(.*?)-->/i', '$0' . $html, $content, 1 );
+			return preg_replace_callback( '/<!--more(.*?)-->/i', $insert_after, $content, 1 );
 		} else {
 			return $html . $content;
 		}
